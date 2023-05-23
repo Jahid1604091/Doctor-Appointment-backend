@@ -17,18 +17,23 @@ import Profile from "./pages/Profile.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import UpdateProfile from "./pages/UpdateProfile.jsx";
 import About from "./pages/About.jsx";
+import AppointDoctor from "./pages/AppointDoctor.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
       <Route index path="/" element={<Home />} />
-      <Route index path="/login" element={<Login />} />
-      <Route index path="/register" element={<Register />} />
-      <Route index path="/about" element={<About />} />
-      <Route path="" element={<PrivateRoute />}>
+      <Route  path="/login" element={<Login />} />
+      <Route  path="/register" element={<Register />} />
+      <Route  path="/about" element={<About />} />
+      <Route  path="/appoint-doctor" element={<AppointDoctor />} />
+      <Route  path="/profile" element={<Profile />} />
+      <Route  path="/profile/edit" element={<UpdateProfile />} />
+
+      {/* <Route path="" element={<PrivateRoute />}>
         <Route index path="/profile" element={<Profile />} />
         <Route index path="/profile/edit" element={<UpdateProfile />} />
-      </Route>
+      </Route> */}
     </Route>
   )
 );
