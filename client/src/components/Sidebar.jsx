@@ -3,8 +3,10 @@ import { Container, Row, Col } from "react-bootstrap";
 import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import { FaTachometerAlt, FaAdn, FaBuffer } from "react-icons/fa";
+import { useSelector } from "react-redux";
 export default function Sidebar() {
     const {pathname} = useLocation();
+    const { collapsedSidebar } = useSelector((state) => state.app);
     
   const items = [
     {
@@ -37,7 +39,7 @@ export default function Sidebar() {
                 return (
                   <li key={item.id} className={pathname === item.path ? 'active-menu' : ''}>
                     <Link to={item.path}>
-                      {item.icon} {item.text}
+                      {item.icon} {!collapsedSidebar && item.text}
                     </Link>
                   </li>
                 );
@@ -58,7 +60,7 @@ const Wrapper = styled.section`
   ul {
     margin-top: 40px;
     li {
-      margin: 10px auto;
+      margin: auto;
       padding: 10px;
       text-transform: capitalize;
       font-size: 16px;
@@ -68,8 +70,6 @@ const Wrapper = styled.section`
       background-color: var(--clr-primary-1);
       color: var(--clr-primary-1);
       padding: 5px;
-     
-      
     }
   }
 
