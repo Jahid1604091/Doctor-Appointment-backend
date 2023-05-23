@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useDeleteProfileMutation } from "../slices/userApiSlice";
 import { logout } from "../slices/authSlice";
+import Layout from "../components/Layout";
 
 export default function Profile() {
   const {
@@ -26,7 +27,7 @@ export default function Profile() {
     }
   };
   return (
-    <FormContainer>
+    <Layout>
       <Card>
         <Card.Img
           variant="top"
@@ -51,6 +52,6 @@ export default function Profile() {
           </Link>
         </Card.Body>
       </Card>
-    </FormContainer>
+    </Layout>
   );
 }

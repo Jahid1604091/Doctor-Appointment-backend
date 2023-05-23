@@ -10,6 +10,7 @@ export default function Layout({ children }) {
   const { collapsedSidebar } = useSelector((state) => state.app);
 
   const dispatch = useDispatch();
+
   return (
     <Wrapper>
       <div className="d-flex justify-content-between">
@@ -19,12 +20,13 @@ export default function Layout({ children }) {
 
         <div className={collapsedSidebar ? "main-collapsed" : "main"}>
           <div className="border">
-            <span
+            <div
               className="icon"
               onClick={() => dispatch(setCollapsed(!collapsedSidebar))}
             >
               {collapsedSidebar ? <MdMenuOpen /> : <FaTimes />}
-            </span>
+            </div>
+           
           </div>
           <div className="">{children}</div>
         </div>

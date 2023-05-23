@@ -7,6 +7,8 @@ import { useLogoutMutation } from "../slices/userApiSlice";
 import { logout } from "../slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { GrNotification } from "react-icons/gr";
+import { IconContext } from "react-icons";
 
 function Header() {
   const { userInfo } = useSelector((state) => state.auth);
@@ -30,27 +32,35 @@ function Header() {
         <Container>
           <Navbar.Brand href="/">Sample Auth </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
               <Link to="/about">About</Link>
             </Nav>
+            <Nav className="notification">
+              <Link to="/notifications">
+                <GrNotification/>
+              </Link>
+            </Nav>
 
             <Nav>
               {userInfo ? (
-                <NavDropdown
-                  title={userInfo?.name}
-                  id="collasible-nav-dropdown"
-                >
-                  <NavDropdown.Item>
-                    <Link to="/profile">Profile</Link>
+                <NavDropdown title={userInfo?.name} className="nav-dropdown">
+                  {/* <NavDropdown.Item className="nav-item" to='/profile'>
+                   Profile
                   </NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item onClick={logoutHandler}>
+                  <NavDropdown.Divider /> */}
+                  <NavDropdown.Item
+                    className="nav-item"
+                    onClick={logoutHandler}
+                  >
                     Logout
                   </NavDropdown.Item>
                 </NavDropdown>
               ) : (
-                <><p className="text-light">Guest</p></>
+                <>
+                  <p className="text-light">Guest</p>
+                </>
               )}
             </Nav>
           </Navbar.Collapse>
@@ -63,9 +73,35 @@ function Header() {
 const Wrapper = styled.section`
   height: 10vh;
   background-color: var(--clr-grey-1);
+  color: var(--clr-primary-10);
   box-shadow: var(--light-shadow);
+  .notification {
+    font-size: 22px;
+  }
   a {
+    &:hover {
+      color: var(--clr-primary-2);
+    }
+  }
+  .nav-dropdown,
+  .nav-link,
+  .nav-link.show {
+    box-shadow: var(--light-shadow);
     color: var(--clr-primary-10);
+    &:hover {
+      color: var(--clr-primary-10);
+    }
+    .nav-item,
+    .nav-item a {
+      color: var(--clr-primary-10);
+      &:hover {
+        color: var(--clr-primary-2);
+      }
+    }
+    .dropdown-menu {
+      background-color: var(--clr-primary-2);
+      color: var(--clr-primary-10);
+    }
   }
 `;
 

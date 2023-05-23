@@ -67,6 +67,11 @@
   }
   a {
     text-decoration: none;
+    color: var(--clr-primary-10);
+  }
+  a:hover{
+    color: var(--clr-primary-10);
+
   }
   
   /*  global classes */

@@ -7,8 +7,9 @@ import { useSelector } from "react-redux";
 export default function Sidebar() {
     const {pathname} = useLocation();
     const { collapsedSidebar } = useSelector((state) => state.app);
+    const { userInfo:{role} } = useSelector((state) => state.auth);
     
-  const items = [
+  const userMenu = [
     {
       id: 1,
       text: "Home",
@@ -27,14 +28,44 @@ export default function Sidebar() {
       path: "/profile",
       icon: <FaBuffer />,
     },
-  ];
+  ]
+    
+  const adminMenu = [
+    {
+      id: 1,
+      text: "Home",
+      path: "/",
+      icon: <FaTachometerAlt />,
+    },
+    {
+      id: 2,
+      text: "doctors",
+      path: "/doctors",
+      icon: <FaAdn />,
+    },
+    {
+      id: 3,
+      text: "users",
+      path: "/users",
+      icon: <FaAdn />,
+    },
+    {
+      id: 4,
+      text: "profile",
+      path: "/profile",
+      icon: <FaBuffer />,
+    },
+  ]
+
+  const menuToRender = role ==='user' ? userMenu : role === 'admin' ? adminMenu : null;
+
   return (
     <Wrapper>
       <Container>
         <Row>
           <Col>
             <ul>
-              {items.map((item) => {
+              {menuToRender.map((item) => {
               
                 return (
                   <li key={item.id} className={pathname === item.path ? 'active-menu' : ''}>

@@ -22,10 +22,22 @@ const userSchema = mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user'
     },
+    isDoctor:{
+        type:Boolean,
+        default:false
+    },
     password: {
         type: String,
         required: [true, 'Please add a password'],
         minlength: 6,
+    },
+    seenNotifications:{
+        type:Array,
+        default:[]
+    },
+    unseenNotifications:{
+        type:Array,
+        default:[]
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
