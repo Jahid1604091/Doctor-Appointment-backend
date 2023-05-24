@@ -32,24 +32,19 @@ function Header() {
         <Container>
           <Navbar.Brand href="/">Sample Auth </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-
           <Navbar.Collapse id="responsive-navbar-nav">
             <Nav className="me-auto">
               <Link to="/about">About</Link>
             </Nav>
             <Nav className="notification">
               <Link to="/notifications">
-                <GrNotification/>
+                <GrNotification/> <span>{userInfo?.unseenNotifications ? userInfo?.unseenNotifications.length : 0}</span>
               </Link>
             </Nav>
 
             <Nav>
               {userInfo ? (
                 <NavDropdown title={userInfo?.name} className="nav-dropdown">
-                  {/* <NavDropdown.Item className="nav-item" to='/profile'>
-                   Profile
-                  </NavDropdown.Item>
-                  <NavDropdown.Divider /> */}
                   <NavDropdown.Item
                     className="nav-item"
                     onClick={logoutHandler}

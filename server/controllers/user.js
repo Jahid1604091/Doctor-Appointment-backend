@@ -1,6 +1,6 @@
 import asyncHandler from "express-async-handler";
 import { User } from "../models/user.js";
-import { Doctor } from "../models/Doctor.js";
+import { Doctor } from "../models/doctor.js";
 
 //public -> api/users/auth
 export const auth_user = asyncHandler(async (req, res) => {
@@ -116,17 +116,21 @@ export const delete_profile = asyncHandler(async (req, res) => {
 });
 
 
-//public -> api/users/doctor
+//public -> api/users/apply-as-doctor
 export const register_as_doctor = asyncHandler(async (req, res) => {
-    const isExist = await User.findOne({ userId: req.body.userId });
+
+    const isExist = await Doctor.findOne({userId:req.user._id});
     if (isExist) {
         res.status(400);
-        throw new Error('This Doctor Account Already Exist')
+        throw new Error('This Doctor Account Already Exist');
     }
-    const newDoctor = await Doctor.create({ ...req.body, status: "pending" });
+
+    const newDoctor = new Doctor({...req.body,status:"pending"});
+    const savedDoctor = await newDoctor.save();
+  
     if (newDoctor) {
         //find user details
-        const user = await User.findById(req.body.userId);
+        const user = await User.findById(req.user._id);
 
         //send apply notification to admin
         const admin = await User.findOne({ role: 'admin' });
@@ -142,7 +146,7 @@ export const register_as_doctor = asyncHandler(async (req, res) => {
             clickPath: '/admin/doctors'
         });
 
-        await User.findByIdAndUpdate(admin._id,{unseenNotifications});
+        await User.findByIdAndUpdate(admin._id, { unseenNotifications });
 
 
         return res.status(201).json({
@@ -156,3 +160,21 @@ export const register_as_doctor = asyncHandler(async (req, res) => {
         throw new Error('Invalid Data');
     }
 });
+
+//public -> api/users/mark-all-as-read
+export const markAllAsRead = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.user );
+    const unseenNotifications = user.unseenNotifications;
+    const seenNotifications = user.seenNotifications;
+    seenNotifications.push(...unseenNotifications);
+    user.unseenNotifications = [];
+    await user.save();
+
+    res.status(200).json({
+        success:true,
+        data:user
+    })
+
+});
+
+

@@ -20,6 +20,7 @@ import About from "./pages/About.jsx";
 import AppointDoctor from "./pages/AppointDoctor.jsx";
 import ApplyAsDoctor from "./pages/ApplyAsDoctor.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import Notifications from "./pages/Notifications.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -35,6 +36,7 @@ const router = createBrowserRouter(
         <Route path="/apply-as-doctor" element={<ApplyAsDoctor />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/edit" element={<UpdateProfile />} />
+        <Route path="/notifications" element={<Notifications />} />
       </Route>
     </Route>
   )

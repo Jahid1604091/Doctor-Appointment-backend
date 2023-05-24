@@ -7,6 +7,10 @@ const doctorSchema = mongoose.Schema({
         type:String,
         required:true
     },
+    email:{
+        type:String,
+        required:true
+    },
     expertise_in: {
         type: String,
         required: [true, 'Please add your expertise area'],

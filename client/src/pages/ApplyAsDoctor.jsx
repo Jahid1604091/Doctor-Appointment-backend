@@ -25,8 +25,8 @@ export default function ApplyAsDoctor() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await registerAsDoctor({ ...info, userId: userInfo._id });
-    console.log(res)
+    const res = await registerAsDoctor({ ...info, userId: userInfo?._id });
+    //set alert
   }
 
 
