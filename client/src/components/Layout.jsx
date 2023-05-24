@@ -19,15 +19,15 @@ export default function Layout({ children }) {
         </div>
 
         <div className={collapsedSidebar ? "main-collapsed" : "main"}>
-          <div className="border">
-            <div
+         
+            <span
               className="icon"
               onClick={() => dispatch(setCollapsed(!collapsedSidebar))}
             >
               {collapsedSidebar ? <MdMenuOpen /> : <FaTimes />}
-            </div>
+            </span>
            
-          </div>
+          
           <div className="">{children}</div>
         </div>
       </div>

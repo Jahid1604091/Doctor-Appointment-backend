@@ -125,20 +125,13 @@ export const register_as_doctor = asyncHandler(async (req, res) => {
     }
     const newDoctor = await Doctor.create({ ...req.body, status: "pending" });
     if (newDoctor) {
-        res.cookie('jwt', newDoctor.getSignedJwtToken(), {
-            httpOnly: true,
-            secure: process.env.NODE_ENV !== 'development',
-            sameSite: 'strict',
-            maxAge: 30 * 24 * 24 * 60 * 60
-        })
-
         //find user details
         const user = await User.findById(req.body.userId);
 
         //send apply notification to admin
         const admin = await User.findOne({ role: 'admin' });
         const unseenNotifications = admin.unseenNotifications;
-        
+
         unseenNotifications.push({
             type: 'new-doctor',
             message: `${user.name} has applied for doctor account!`,
@@ -155,7 +148,6 @@ export const register_as_doctor = asyncHandler(async (req, res) => {
         return res.status(201).json({
             success: true,
             data: newDoctor,
-            token: newDoctor.getSignedJwtToken()
         });
 
     }
