@@ -1,6 +1,9 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 const doctorSchema = mongoose.Schema({
+ 
     name: {
         type: String,
         minlength: [5, 'Name cant be less than 5 char']

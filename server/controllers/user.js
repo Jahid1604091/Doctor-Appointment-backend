@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import { User } from "../models/user.js";
+import { Doctor } from "../models/Doctor.js";
 
 //public -> api/users/auth
 export const auth_user = asyncHandler(async (req, res) => {
@@ -112,4 +113,51 @@ export const delete_profile = asyncHandler(async (req, res) => {
 
 
 
+});
+
+
+//public -> api/users/doctor
+export const register_as_doctor = asyncHandler(async (req, res) => {
+    const isExist = await User.findOne({ email: req.body.email });
+    if (isExist) {
+        res.status(400);
+        throw new Error('This Doctor Account Already Exist')
+    }
+    const newDoctor = await Doctor.create({ ...req.body, status: "pending" });
+    if (newDoctor) {
+        res.cookie('jwt', newDoctor.getSignedJwtToken(), {
+            httpOnly: true,
+            secure: process.env.NODE_ENV !== 'development',
+            sameSite: 'strict',
+            maxAge: 30 * 24 * 24 * 60 * 60
+        })
+
+        //send apply notification to admin
+        const admin = await User.findOne({ role: 'admin' });
+        console.log(admin)
+        const unseenNotifications = admin.unseenNotifications;
+        unseenNotifications.push({
+            type: 'new-doctor',
+            message: `${newDoctor.name} has applied for doctor account!`,
+            data: {
+                doctorId: newDoctor._id,
+                name: newDoctor.name
+            },
+            clickPath: '/admin/doctors'
+        });
+
+        await User.findByIdAndUpdate(admin._id,{unseenNotifications});
+
+
+        return res.status(201).json({
+            success: true,
+            data: newDoctor,
+            token: newDoctor.getSignedJwtToken()
+        });
+
+    }
+    else {
+        res.status(400);
+        throw new Error('Invalid Data');
+    }
 });
