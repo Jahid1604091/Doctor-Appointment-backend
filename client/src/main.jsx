@@ -18,22 +18,24 @@ import PrivateRoute from "./components/PrivateRoute.jsx";
 import UpdateProfile from "./pages/UpdateProfile.jsx";
 import About from "./pages/About.jsx";
 import AppointDoctor from "./pages/AppointDoctor.jsx";
+import ApplyAsDoctor from "./pages/ApplyAsDoctor.jsx";
+import NotFound from "./pages/NotFound.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<App />}>
-      <Route index path="/" element={<Home />} />
-      <Route  path="/login" element={<Login />} />
-      <Route  path="/register" element={<Register />} />
-      <Route  path="/about" element={<About />} />
-      <Route  path="/appoint-doctor" element={<AppointDoctor />} />
-      <Route  path="/profile" element={<Profile />} />
-      <Route  path="/profile/edit" element={<UpdateProfile />} />
+      <Route index path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+      <Route path="/about" element={<About />} />
+      <Route path="*" element={<NotFound />} />
 
-      {/* <Route path="" element={<PrivateRoute />}>
-        <Route index path="/profile" element={<Profile />} />
-        <Route index path="/profile/edit" element={<UpdateProfile />} />
-      </Route> */}
+      <Route path="" element={<PrivateRoute />}>
+        <Route index path="/" element={<Home />} />
+        <Route path="/appoint-doctor" element={<AppointDoctor />} />
+        <Route path="/apply-as-doctor" element={<ApplyAsDoctor />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/edit" element={<UpdateProfile />} />
+      </Route>
     </Route>
   )
 );

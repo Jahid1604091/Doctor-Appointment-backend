@@ -24,6 +24,28 @@ export default function Sidebar() {
     },
     {
       id: 3,
+      text: "Apply as doctor",
+      path: "/apply-as-doctor",
+      icon: <FaAdn />,
+    },
+    {
+      id: 4,
+      text: "profile",
+      path: "/profile",
+      icon: <FaBuffer />,
+    },
+  ]
+    
+  const doctorMenu = [
+    {
+      id: 1,
+      text: "Home",
+      path: "/",
+      icon: <FaTachometerAlt />,
+    },
+
+    {
+      id: 3,
       text: "profile",
       path: "/profile",
       icon: <FaBuffer />,
@@ -57,7 +79,7 @@ export default function Sidebar() {
     },
   ]
 
-  const menuToRender = role ==='user' ? userMenu : role === 'admin' ? adminMenu : null;
+  const menuToRender = role ==='user' ? userMenu : role === 'admin' ? adminMenu : doctorMenu;
 
   return (
     <Wrapper>

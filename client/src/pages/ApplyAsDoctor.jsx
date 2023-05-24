@@ -1,10 +1,8 @@
 import React from 'react'
 import Layout from '../components/Layout'
 
-
-export default function Home() {
-
+export default function ApplyAsDoctor() {
   return (
-    <Layout>Home</Layout>
+    <Layout>ApplyAsDoctor</Layout>
   )
 }

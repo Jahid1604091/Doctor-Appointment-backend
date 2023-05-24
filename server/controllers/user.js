@@ -118,7 +118,7 @@ export const delete_profile = asyncHandler(async (req, res) => {
 
 //public -> api/users/doctor
 export const register_as_doctor = asyncHandler(async (req, res) => {
-    const isExist = await User.findOne({ email: req.body.email });
+    const isExist = await User.findOne({ userId: req.body.userId });
     if (isExist) {
         res.status(400);
         throw new Error('This Doctor Account Already Exist')
@@ -132,16 +132,19 @@ export const register_as_doctor = asyncHandler(async (req, res) => {
             maxAge: 30 * 24 * 24 * 60 * 60
         })
 
+        //find user details
+        const user = await User.findById(req.body.userId);
+
         //send apply notification to admin
         const admin = await User.findOne({ role: 'admin' });
-        console.log(admin)
         const unseenNotifications = admin.unseenNotifications;
+        
         unseenNotifications.push({
             type: 'new-doctor',
-            message: `${newDoctor.name} has applied for doctor account!`,
+            message: `${user.name} has applied for doctor account!`,
             data: {
                 doctorId: newDoctor._id,
-                name: newDoctor.name
+                name: user.name
             },
             clickPath: '/admin/doctors'
         });

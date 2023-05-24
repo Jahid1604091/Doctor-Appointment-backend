@@ -3,25 +3,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 const doctorSchema = mongoose.Schema({
- 
-    name: {
-        type: String,
-        minlength: [5, 'Name cant be less than 5 char']
-    },
-
-    email: {
-        type: String,
-        unique: true,
-        required: [true, 'Please add a valid email'],
-        match: [
-            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-            'Please add a valid email'
-        ]
-    },
-    password: {
-        type: String,
-        required: [true, 'Please add a password'],
-        minlength: 6,
+    userId:{
+        type:String,
+        required:true
     },
     expertise_in: {
         type: String,
@@ -35,13 +19,9 @@ const doctorSchema = mongoose.Schema({
         type: Number,
         required: [true, 'Please add your consulting fee'],
     },
-    password: {
-        type: String,
-        required: [true, 'Please add a password'],
-        minlength: 6,
-    },
+
     phone: {
-        type: Number,
+        type: String,
         required: true
     },
     status:{
