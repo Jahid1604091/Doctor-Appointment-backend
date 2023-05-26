@@ -1,5 +1,14 @@
 import express from 'express';
-import { auth_user, delete_profile, get_profile, logout, markAllAsRead, register, register_as_doctor, update_profile } from '../controllers/user.js';
+import {
+    auth_user,
+    delete_profile,
+    get_profile,
+    logout,
+    markAllAsRead,
+    register,
+    register_as_doctor,
+    update_profile
+} from '../controllers/user.js';
 import { protect } from '../middleware/auth.js';
 
 const router = express.Router();

@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { FaTachometerAlt, FaAdn, FaBuffer } from "react-icons/fa";
 import { useSelector } from "react-redux";
 export default function Sidebar() {
+  
     const {pathname} = useLocation();
     const { collapsedSidebar } = useSelector((state) => state.app);
     const { userInfo:{role} } = useSelector((state) => state.auth);
@@ -62,13 +63,13 @@ export default function Sidebar() {
     {
       id: 2,
       text: "doctors",
-      path: "/doctors",
+      path: "/admin/doctors",
       icon: <FaAdn />,
     },
     {
       id: 3,
       text: "users",
-      path: "/users",
+      path: "/admin/users",
       icon: <FaAdn />,
     },
     {
@@ -95,7 +96,7 @@ export default function Sidebar() {
                       {item.icon} {!collapsedSidebar && item.text}
                     </Link>
                   </li>
-                );
+                )
               })}
             </ul>
           </Col>

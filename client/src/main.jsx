@@ -21,6 +21,8 @@ import AppointDoctor from "./pages/AppointDoctor.jsx";
 import ApplyAsDoctor from "./pages/ApplyAsDoctor.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Notifications from "./pages/Notifications.jsx";
+import Users from "./pages/admin/Users.jsx";
+import Doctors from "./pages/admin/Doctors.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -37,6 +39,9 @@ const router = createBrowserRouter(
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/edit" element={<UpdateProfile />} />
         <Route path="/notifications" element={<Notifications />} />
+
+        <Route path="/admin/users" element={<Users />} />
+        <Route path="/admin/doctors" element={<Doctors />} />
       </Route>
     </Route>
   )
