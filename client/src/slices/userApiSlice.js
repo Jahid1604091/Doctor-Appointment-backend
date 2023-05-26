@@ -50,6 +50,10 @@ export const userApiSlice = apiSlice.injectEndpoints({
             })
         }),
 
+        getAllApprovedDoctors: builder.query({
+            query:()=> `${URL}/approved-doctors`,
+        }),
+
         logout:builder.mutation({
             query:()=>({
                 url:`${URL}/logout`,
@@ -67,5 +71,6 @@ export const {
     useUpdateProfileMutation,
     useDeleteProfileMutation,
     useMarkAllAsReadMutation,
+    useGetAllApprovedDoctorsQuery,
     useLogoutMutation
 } = userApiSlice;

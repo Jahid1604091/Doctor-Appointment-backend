@@ -1,11 +1,15 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 const doctorSchema = mongoose.Schema({
-    userId:{
-        type:String,
-        required:true
+    // userId:{
+    //     type:String,
+    //     required:true
+    // },
+    user:{
+        type:mongoose.Types.ObjectId,
+        ref:'User'
     },
     email:{
         type:String,

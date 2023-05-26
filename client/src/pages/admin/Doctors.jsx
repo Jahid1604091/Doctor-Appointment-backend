@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Layout from "../../components/Layout";
 import { Table } from "react-bootstrap";
 import {
@@ -6,12 +6,11 @@ import {
   useGetAllDoctorsQuery,
 } from "../../slices/adminApiSlice";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+
 
 export default function Doctors() {
   const { data } = useGetAllDoctorsQuery();
   const [approveAsDoctor, { isLoading }] = useApproveAsDoctorMutation();
-  const dispatch = useDispatch();
 
   const handleApprove = async(id) => {
     const res  = await approveAsDoctor(id);

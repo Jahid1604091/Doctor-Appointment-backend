@@ -10,6 +10,7 @@ import {
     update_profile
 } from '../controllers/user.js';
 import { protect } from '../middleware/auth.js';
+import { get_all_approved_doctors } from '../controllers/admin/users.js';
 
 const router = express.Router();
 
@@ -23,5 +24,7 @@ router.route('/profile')
 
 router.post('/apply-as-doctor', protect, register_as_doctor);
 router.put('/mark-all-as-read', protect, markAllAsRead);
+router.get('/approved-doctors', protect, get_all_approved_doctors);
+router.get('/doctors/:id', protect, get_all_approved_doctors);
 
 export default router;

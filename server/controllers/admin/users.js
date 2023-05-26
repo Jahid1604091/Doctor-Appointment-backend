@@ -14,6 +14,12 @@ export const get_all_doctors = asyncHandler(async (req, res) => {
     res.status(200).json(doctors);
 });
 
+//private by admin -> api/admin/approved-doctors
+export const get_all_approved_doctors = asyncHandler(async (req, res) => {
+    const doctors = await Doctor.find({status:'approved'}).populate('user');
+    res.status(200).json(doctors);
+});
+
 //@todo private by admin -> api/admin/approve-all-as-doctor
 
 
@@ -22,7 +28,7 @@ export const approveAsDoctor = asyncHandler(async (req, res) => {
     const doctor = await Doctor.findByIdAndUpdate(req.params.id,{status:'approved'});
 
     //send approval notification to the doctor
-    const user = await User.findById(doctor.userId);
+    const user = await User.findById(doctor.user);
     const unseenNotifications = user.unseenNotifications;
 
     unseenNotifications.push({

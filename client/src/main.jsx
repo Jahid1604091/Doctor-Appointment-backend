@@ -23,6 +23,7 @@ import NotFound from "./pages/NotFound.jsx";
 import Notifications from "./pages/Notifications.jsx";
 import Users from "./pages/admin/Users.jsx";
 import Doctors from "./pages/admin/Doctors.jsx";
+import Appointment from "./pages/Appointment.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -42,6 +43,7 @@ const router = createBrowserRouter(
 
         <Route path="/admin/users" element={<Users />} />
         <Route path="/admin/doctors" element={<Doctors />} />
+        <Route path="/doctors/:id" element={<Appointment />} />
       </Route>
     </Route>
   )

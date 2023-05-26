@@ -125,8 +125,8 @@ export const register_as_doctor = asyncHandler(async (req, res) => {
         throw new Error('This Doctor Account Already Exist');
     }
 
-    const newDoctor = new Doctor({...req.body,status:"pending"});
-    const savedDoctor = await newDoctor.save();
+    const newDoctor = new Doctor({...req.body,status:"pending",user:req.user._id});
+    await newDoctor.save();
   
     if (newDoctor) {
         //find user details
@@ -176,5 +176,7 @@ export const markAllAsRead = asyncHandler(async (req, res) => {
     })
 
 });
+
+
 
 
