@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Layout from "../../components/Layout";
 import { Table } from "react-bootstrap";
-import { useGetAllDoctorsQuery } from "../../slices/adminApiSlice";
+import {
+  useApproveAsDoctorMutation,
+  useGetAllDoctorsQuery,
+} from "../../slices/adminApiSlice";
 import { Link } from "react-router-dom";
-
+import { useDispatch } from "react-redux";
 
 export default function Doctors() {
   const { data } = useGetAllDoctorsQuery();
+  const [approveAsDoctor, { isLoading }] = useApproveAsDoctorMutation();
+  const dispatch = useDispatch();
+
+  const handleApprove = async(id) => {
+    const res  = await approveAsDoctor(id);
+  };
+  
   const tbody_data = data?.map((doctor) => {
     return (
       <tr key={doctor._id}>
@@ -14,7 +24,13 @@ export default function Doctors() {
         <td>{doctor.name ? doctor.name : null}</td>
         <td>{doctor.email}</td>
         <td>{doctor.createdAt}</td>
-        <td>{doctor.status === 'pending' ? <Link>Approve</Link> : <Link>Block</Link>}</td>
+        <td>
+          {doctor.status === "pending" ? (
+            <span onClick={()=>handleApprove(doctor._id)}>Approve</span>
+          ) : (
+            <Link>Block</Link>
+          )}
+        </td>
       </tr>
     );
   });
