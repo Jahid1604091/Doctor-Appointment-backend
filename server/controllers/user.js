@@ -117,7 +117,7 @@ export const delete_profile = asyncHandler(async (req, res) => {
 });
 
 
-//public -> api/users/apply-as-doctor
+//private -> api/users/apply-as-doctor
 export const register_as_doctor = asyncHandler(async (req, res) => {
 
     const isExist = await Doctor.findOne({userId:req.user._id});
@@ -162,7 +162,7 @@ export const register_as_doctor = asyncHandler(async (req, res) => {
     }
 });
 
-//public -> api/users/mark-all-as-read
+//private -> api/users/mark-all-as-read
 export const markAllAsRead = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user );
     const unseenNotifications = user.unseenNotifications;
@@ -178,7 +178,7 @@ export const markAllAsRead = asyncHandler(async (req, res) => {
 
 });
 
-//public -> api/users/apply-as-doctor
+//private -> api/users/apply-as-doctor
 export const new_appointment = asyncHandler(async (req, res) => {
 
     // const isExist = await Appointment.findOne({userId:req.user._id});
@@ -219,6 +219,7 @@ export const new_appointment = asyncHandler(async (req, res) => {
         throw new Error('Invalid Data');
     }
 });
+
 
 
 

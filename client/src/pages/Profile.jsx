@@ -9,7 +9,7 @@ import Layout from "../components/Layout";
 
 export default function Profile() {
   const {
-    userInfo: { name, email },
+    userInfo: { name, email, isDoctor },
   } = useSelector((state) => state.auth);
 
   const [deleteProfile, { isLoading }] = useDeleteProfileMutation();
@@ -36,6 +36,7 @@ export default function Profile() {
         <Card.Body>
           <Card.Title>
             <h2>{name}</h2>
+            <span>{isDoctor ? 'Doctor' : ''}</span>
           </Card.Title>
           <Card.Text>
             Some quick example text to build on the card title and make up the

@@ -4,9 +4,9 @@ import styled from "styled-components";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useRegisterAsDoctorMutation } from "../slices/userApiSlice";
-
+import { Space, TimePicker } from "antd";
+import moment from "moment/moment";
 export default function ApplyAsDoctor() {
- 
   const { userInfo } = useSelector((state) => state.auth);
   const [registerAsDoctor, { isLoading, isError, error }] =
     useRegisterAsDoctorMutation();
@@ -15,9 +15,16 @@ export default function ApplyAsDoctor() {
     expertise_in: "",
     experience: "",
     fee: "",
-    start_time: "",
-    end_time: "",
   });
+
+  const [startTime,setStartTime] = useState();
+  const [endTime,setEndTime] = useState();
+  
+  const [timeRange, setTimeRange] = useState();
+
+  const onTimeChange = (time, timeString) => {
+    setTimeRange(time);
+  };
 
   const handleChange = (e) => {
     setInfo({ ...info, [e.target.name]: e.target.value });
@@ -25,12 +32,14 @@ export default function ApplyAsDoctor() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await registerAsDoctor({...info,userId:userInfo?._id,email:userInfo?.email});
-    console.log(res)
+    const res = await registerAsDoctor({
+      ...info,
+      timings:timeRange,
+      email: userInfo?.email,
+    });
+    // console.log({...info,timeRange});
     //set alert
-  }
-
-
+  };
   return (
     <Wrapper>
       <Layout>
@@ -59,23 +68,25 @@ export default function ApplyAsDoctor() {
             </Row>
 
             <Row className="mb-3">
+
               <Form.Group as={Col} controlId="formGridEmail">
-                <Form.Label>Start Time</Form.Label>
-                <Form.Control
-                  type="date"
-                  name="start_time"
-                  onChange={handleChange}
+                <Form.Label>Select Time Range</Form.Label>
+                <TimePicker.RangePicker
+                  use12Hours
+                  format="h:mm a"
+                  name="time"
+                  onChange={onTimeChange}
                 />
               </Form.Group>
 
-              <Form.Group as={Col} controlId="formGridEmail">
+              {/* <Form.Group as={Col} controlId="formGridEmail">
                 <Form.Label>End Time</Form.Label>
                 <Form.Control
                   type="date"
                   name="end_time"
                   onChange={handleChange}
                 />
-              </Form.Group>
+              </Form.Group> */}
             </Row>
 
             <Row className="mb-3">
