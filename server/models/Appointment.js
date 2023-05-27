@@ -1,12 +1,29 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const appointmentSchema = mongoose.Schema({
-    name: {
-        type: String,
-        minlength: [5, 'Name cant be less than 5 char']
+
+    user:{
+        type:Schema.Types.ObjectId,
+        ref:'User',
+    },
+    doctor:{
+        type:Schema.Types.ObjectId,
+        ref:'Doctor',
+    },
+    time:{
+        type:String,
+        required:true,
+    },
+    date:{
+        type:String,
+        required:true,
+    },
+    status:{
+        type:String,
+        default:'pending'
     },
 
-}, { timestamps: true })
+}, { timestamps: true });
 
 
 export const Appointment = mongoose.model('Appointment', appointmentSchema);

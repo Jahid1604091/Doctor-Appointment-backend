@@ -5,6 +5,7 @@ import {
     get_profile,
     logout,
     markAllAsRead,
+    new_appointment,
     register,
     register_as_doctor,
     update_profile
@@ -23,6 +24,7 @@ router.route('/profile')
     .delete(protect, delete_profile);
 
 router.post('/apply-as-doctor', protect, register_as_doctor);
+router.post('/appointment', protect, new_appointment);
 router.put('/mark-all-as-read', protect, markAllAsRead);
 router.get('/approved-doctors', protect, get_all_approved_doctors);
 router.get('/doctors/:id', protect, get_all_approved_doctors);

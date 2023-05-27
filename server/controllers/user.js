@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import { User } from "../models/user.js";
 import { Doctor } from "../models/doctor.js";
+import { Appointment } from "../models/Appointment.js";
 
 //public -> api/users/auth
 export const auth_user = asyncHandler(async (req, res) => {
@@ -177,6 +178,47 @@ export const markAllAsRead = asyncHandler(async (req, res) => {
 
 });
 
+//public -> api/users/apply-as-doctor
+export const new_appointment = asyncHandler(async (req, res) => {
+
+    // const isExist = await Appointment.findOne({userId:req.user._id});
+    // if (isExist) {
+    //     res.status(400);
+    //     throw new Error('This Appointment Already Exist');
+    // }
+    const doctor = await Doctor.findById(req.body.doctor);
+    const doctor_user_table = await User.findById(doctor.user);
+  
+    const newAppointment = new Appointment({...req.body,status:"pending"});
+    await newAppointment.save();
+  
+    if (newAppointment) {
+
+        //User who applying for appointment (patient)
+        const user = await User.findById(req.body.user);
+
+        //send appointment notification to doctor
+        const unseenNotifications = doctor_user_table.unseenNotifications;
+
+        unseenNotifications.push({
+            type: 'new-appointment',
+            message: `${user.name} has applied for your appointment!`,
+            clickPath: '/doctors/appointments'
+        });
+
+        await doctor_user_table.save();
+
+        return res.status(201).json({
+            success: true,
+            data:doctor_user_table
+        });
+
+    }
+    else {
+        res.status(400);
+        throw new Error('Invalid Data');
+    }
+});
 
 
 
