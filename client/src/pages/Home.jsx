@@ -27,6 +27,7 @@ export default function Home() {
                     <Card.Subtitle className="mb-2 text-muted text-uppercase">{doctor.expertise_in}</Card.Subtitle>
                     <Card.Text>
                      <span>Fee Per Visit (BDT) : {doctor.fee}</span>
+                  
                     </Card.Text>
                     <Link to={`doctors/${doctor._id}`} className="btn">Appoint Now</Link>
                   </Card.Body>

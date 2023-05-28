@@ -42,16 +42,24 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 method:'DELETE',
             })
         }),
-
+        
         markAllAsRead:builder.mutation({
             query:()=>({
                 url:`${URL}/mark-all-as-read`,
                 method:'PUT',
             })
         }),
-
+        
         getAllApprovedDoctors: builder.query({
             query:()=> `${URL}/approved-doctors`,
+        }),
+        
+        newAppointment:builder.mutation({
+            query:(data)=>({
+                url:`${URL}/appointment`,
+                method:'POST',
+                body:data
+            })
         }),
 
         logout:builder.mutation({
@@ -72,5 +80,6 @@ export const {
     useDeleteProfileMutation,
     useMarkAllAsReadMutation,
     useGetAllApprovedDoctorsQuery,
+    useNewAppointmentMutation,
     useLogoutMutation
 } = userApiSlice;

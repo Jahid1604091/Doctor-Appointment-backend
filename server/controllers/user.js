@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 import { User } from "../models/user.js";
 import { Doctor } from "../models/doctor.js";
 import { Appointment } from "../models/Appointment.js";
-
+import moment from "moment-timezone";
 //public -> api/users/auth
 export const auth_user = asyncHandler(async (req, res) => {
 
@@ -120,15 +120,15 @@ export const delete_profile = asyncHandler(async (req, res) => {
 //private -> api/users/apply-as-doctor
 export const register_as_doctor = asyncHandler(async (req, res) => {
 
-    const isExist = await Doctor.findOne({userId:req.user._id});
+    const isExist = await Doctor.findOne({ userId: req.user._id });
     if (isExist) {
         res.status(400);
         throw new Error('This Doctor Account Already Exist');
     }
 
-    const newDoctor = new Doctor({...req.body,status:"pending",user:req.user._id});
+    const newDoctor = new Doctor({ ...req.body, status: "pending", user: req.user._id });
     await newDoctor.save();
-  
+
     if (newDoctor) {
         //find user details
         const user = await User.findById(req.user._id);
@@ -164,7 +164,7 @@ export const register_as_doctor = asyncHandler(async (req, res) => {
 
 //private -> api/users/mark-all-as-read
 export const markAllAsRead = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.user );
+    const user = await User.findById(req.user);
     const unseenNotifications = user.unseenNotifications;
     const seenNotifications = user.seenNotifications;
     seenNotifications.push(...unseenNotifications);
@@ -172,8 +172,8 @@ export const markAllAsRead = asyncHandler(async (req, res) => {
     await user.save();
 
     res.status(200).json({
-        success:true,
-        data:user
+        success: true,
+        data: user
     })
 
 });
@@ -186,38 +186,48 @@ export const new_appointment = asyncHandler(async (req, res) => {
     //     res.status(400);
     //     throw new Error('This Appointment Already Exist');
     // }
+    const { time, date } = req.body;
     const doctor = await Doctor.findById(req.body.doctor);
     const doctor_user_table = await User.findById(doctor.user);
-  
-    const newAppointment = new Appointment({...req.body,status:"pending"});
+    // const Asia_time = new Date(req.body.time.getTime() - (req.body.time.offset * 60000));
+
+    delete req.body.date;
+
+    const newAppointment = new Appointment({
+        ...req.body,
+        date:moment(date).format('YYYY-MM-DD'),
+        status: "pending"
+    });
+
+
     await newAppointment.save();
-  
-    if (newAppointment) {
 
-        //User who applying for appointment (patient)
-        const user = await User.findById(req.body.user);
+    // if (newAppointment) {
 
-        //send appointment notification to doctor
-        const unseenNotifications = doctor_user_table.unseenNotifications;
+    //     //User who applying for appointment (patient)
+    //     const user = await User.findById(req.body.user);
 
-        unseenNotifications.push({
-            type: 'new-appointment',
-            message: `${user.name} has applied for your appointment!`,
-            clickPath: '/doctors/appointments'
-        });
+    //     //send appointment notification to doctor
+    //     const unseenNotifications = doctor_user_table.unseenNotifications;
 
-        await doctor_user_table.save();
+    //     unseenNotifications.push({
+    //         type: 'new-appointment',
+    //         message: `${user.name} has applied for your appointment!`,
+    //         clickPath: '/doctors/appointments'
+    //     });
 
-        return res.status(201).json({
-            success: true,
-            data:doctor_user_table
-        });
+    //     await doctor_user_table.save();
 
-    }
-    else {
-        res.status(400);
-        throw new Error('Invalid Data');
-    }
+    //     return res.status(201).json({
+    //         success: true,
+    //         data:doctor_user_table
+    //     });
+
+    // }
+    // else {
+    //     res.status(400);
+    //     throw new Error('Invalid Data');
+    // }
 });
 
 

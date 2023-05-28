@@ -1,5 +1,8 @@
 import asyncHandler from "express-async-handler";
 import { Doctor } from "../models/doctor.js";
+import { Appointment } from "../models/Appointment.js";
+import moment from "moment";
+
 
 //private -> api/doctors/:id/
 export const get_doctor_by_id = asyncHandler(async (req, res) => {
@@ -7,11 +10,20 @@ export const get_doctor_by_id = asyncHandler(async (req, res) => {
     res.status(200).json(doctor);
 });
 
-//private -> api/users/check-availability
+//private -> api/doctors/check-availability
 export const checkAvailability = asyncHandler(async (req, res) => {
 
-    const {date,from_time,to_time} = req.body;
+    const { user, doctor, time, date } = req.body;
+    const from_time = moment(time).subtract(1,'hours');
+    const to_time = moment(time).add(1,'hours');
 
+    const appointments = await Appointment.find(
+        {
+            date:moment(date).format('YYYY-MM-DD'),time: { $gte: from_time, $lt: to_time }
+        }
+    );
+
+    res.status(200).json({ from_time, to_time, appointments });
 
 });
 

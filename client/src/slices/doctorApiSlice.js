@@ -7,9 +7,19 @@ export const doctorApiSlice = apiSlice.injectEndpoints({
             query:(id)=> `${URL}/${id}`,
             providesTags:['Doctors']
         }),
+
+        checkAvailability:builder.mutation({
+            query:(data)=>({
+                url:`${URL}/check-availability`,
+                method:'POST',
+                body:data
+            })
+        }),
+
     })
 });
 
 export const {
-    useGetDoctorByIdQuery
+    useGetDoctorByIdQuery,
+    useCheckAvailabilityMutation,
 } = doctorApiSlice;
