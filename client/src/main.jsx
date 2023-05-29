@@ -17,13 +17,13 @@ import Profile from "./pages/Profile.jsx";
 import PrivateRoute from "./components/PrivateRoute.jsx";
 import UpdateProfile from "./pages/UpdateProfile.jsx";
 import About from "./pages/About.jsx";
-import AppointDoctor from "./pages/AppointDoctor.jsx";
 import ApplyAsDoctor from "./pages/ApplyAsDoctor.jsx";
 import NotFound from "./pages/NotFound.jsx";
 import Notifications from "./pages/Notifications.jsx";
 import Users from "./pages/admin/Users.jsx";
 import Doctors from "./pages/admin/Doctors.jsx";
 import Appointment from "./pages/Appointment.jsx";
+import Appointments from "./pages/Appointments.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -35,7 +35,7 @@ const router = createBrowserRouter(
 
       <Route path="" element={<PrivateRoute />}>
         <Route index path="/" element={<Home />} />
-        <Route path="/appoint-doctor" element={<AppointDoctor />} />
+        <Route path="/booked-appointments" element={<Appointments />} />
         <Route path="/apply-as-doctor" element={<ApplyAsDoctor />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/edit" element={<UpdateProfile />} />

@@ -19,8 +19,8 @@ export default function Sidebar() {
     },
     {
       id: 2,
-      text: "Appoint a doctor",
-      path: "/appoint-doctor",
+      text: "Appointments",
+      path: "/booked-appointments",
       icon: <FaAdn />,
     },
     {

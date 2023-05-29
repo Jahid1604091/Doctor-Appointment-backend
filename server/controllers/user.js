@@ -70,7 +70,6 @@ export const register = asyncHandler(async (req, res) => {
 
 //private -> api/users/profile/
 export const get_profile = asyncHandler(async (req, res) => {
-
     res.status(200).json(req.user)
 });
 
@@ -202,34 +201,39 @@ export const new_appointment = asyncHandler(async (req, res) => {
 
     await newAppointment.save();
 
-    // if (newAppointment) {
+    if (newAppointment) {
 
-    //     //User who applying for appointment (patient)
-    //     const user = await User.findById(req.body.user);
+        //User who applying for appointment (patient)
+        const user = await User.findById(req.body.user);
 
-    //     //send appointment notification to doctor
-    //     const unseenNotifications = doctor_user_table.unseenNotifications;
+        //send appointment notification to doctor
+        const unseenNotifications = doctor_user_table.unseenNotifications;
 
-    //     unseenNotifications.push({
-    //         type: 'new-appointment',
-    //         message: `${user.name} has applied for your appointment!`,
-    //         clickPath: '/doctors/appointments'
-    //     });
+        unseenNotifications.push({
+            type: 'new-appointment',
+            message: `${user.name} has applied for your appointment!`,
+            clickPath: '/doctors/appointments'
+        });
 
-    //     await doctor_user_table.save();
+        await doctor_user_table.save();
 
-    //     return res.status(201).json({
-    //         success: true,
-    //         data:doctor_user_table
-    //     });
+        return res.status(201).json({
+            success: true,
+            data:doctor_user_table
+        });
 
-    // }
-    // else {
-    //     res.status(400);
-    //     throw new Error('Invalid Data');
-    // }
+    }
+    else {
+        res.status(400);
+        throw new Error('Invalid Data');
+    }
 });
 
+//private -> api/users/booked-appointments/
+export const booked_appointments = asyncHandler(async (req, res) => {
+   const appointments = await Appointment.find({user:req.user._id}).populate('doctor');
+   res.status(200).json(appointments)
+});
 
 
 

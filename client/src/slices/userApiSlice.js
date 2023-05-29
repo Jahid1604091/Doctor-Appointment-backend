@@ -9,7 +9,8 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 url:`${URL}/auth`,
                 method:'POST',
                 body:data
-            })
+            }),
+            invalidatesTags:['User']
         }),
 
         register:builder.mutation({
@@ -17,7 +18,8 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 url:`${URL}`,
                 method:'POST',
                 body:data
-            })
+            }),
+            invalidatesTags:['User']
         }),
 
         registerAsDoctor:builder.mutation({
@@ -25,7 +27,8 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 url:`${URL}/apply-as-doctor`,
                 method:'POST',
                 body:data
-            })
+            }),
+            invalidatesTags:['User']
         }),
 
         updateProfile:builder.mutation({
@@ -33,25 +36,35 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 url:`${URL}/profile`,
                 method:'PUT',
                 body:data
-            })
+            }),
+            invalidatesTags:['User']
         }),
 
         deleteProfile:builder.mutation({
             query:()=>({
                 url:`${URL}/profile`,
                 method:'DELETE',
-            })
+            }),
+            invalidatesTags:['User']
         }),
         
         markAllAsRead:builder.mutation({
             query:()=>({
                 url:`${URL}/mark-all-as-read`,
                 method:'PUT',
-            })
+            }),
+            invalidatesTags:['User']
         }),
         
         getAllApprovedDoctors: builder.query({
             query:()=> `${URL}/approved-doctors`,
+            providesTags:['User']
+        }),
+        
+        
+        getAllAppointments: builder.query({
+            query:()=> `${URL}/booked-appointments`,
+            providesTags:['User']
         }),
         
         newAppointment:builder.mutation({
@@ -59,14 +72,16 @@ export const userApiSlice = apiSlice.injectEndpoints({
                 url:`${URL}/appointment`,
                 method:'POST',
                 body:data
-            })
+            }),
+            invalidatesTags:['User']
         }),
 
         logout:builder.mutation({
             query:()=>({
                 url:`${URL}/logout`,
                 method:'POST',
-            })
+            }),
+            invalidatesTags:['User']
         }),
 
     })
@@ -80,6 +95,7 @@ export const {
     useDeleteProfileMutation,
     useMarkAllAsReadMutation,
     useGetAllApprovedDoctorsQuery,
+    useGetAllAppointmentsQuery,
     useNewAppointmentMutation,
     useLogoutMutation
 } = userApiSlice;

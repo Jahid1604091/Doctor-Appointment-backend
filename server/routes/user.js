@@ -1,6 +1,7 @@
 import express from 'express';
 import {
     auth_user,
+    booked_appointments,
     delete_profile,
     get_profile,
     logout,
@@ -28,5 +29,6 @@ router.put('/mark-all-as-read', protect, markAllAsRead);
 router.get('/approved-doctors', protect, get_all_approved_doctors);
 router.get('/doctors/:id', protect, get_all_approved_doctors);
 router.post('/appointment', protect, new_appointment);
+router.get('/booked-appointments', protect, booked_appointments);
 
 export default router;
