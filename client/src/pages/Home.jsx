@@ -5,9 +5,13 @@ import {  Card, Col, Container, Row } from "react-bootstrap";
 import styled from "styled-components";
 import { useGetAllApprovedDoctorsQuery } from "../slices/userApiSlice";
 import { Link } from "react-router-dom";
+import Loader from "../components/Loader";
+import Error from "../components/Error";
 
 export default function Home() {
-  const { data } = useGetAllApprovedDoctorsQuery();
+  const { data = [], isLoading, isFetching, isError  } = useGetAllApprovedDoctorsQuery();
+  if (isError) return <Error/>
+  if (isLoading) return <Loader/>
 
   return (
     <Layout>
@@ -15,7 +19,7 @@ export default function Home() {
         <Row>
           {data?.map((doctor, idx) => {
             return (
-              <Col key={doctor._id}>
+              <Col key={doctor._id} disabled={isFetching}>
                 <Card className="card my-4">
                   <Card.Img
                     variant="top"

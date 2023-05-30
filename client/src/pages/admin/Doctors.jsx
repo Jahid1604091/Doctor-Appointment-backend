@@ -20,7 +20,7 @@ export default function Doctors() {
     return (
       <tr key={doctor._id}>
         <td>{doctor.status}</td>
-        <td>{doctor.name ? doctor.name : null}</td>
+        <td>{doctor.user.name ? doctor.user.name : null}</td>
         <td>{doctor.email}</td>
         <td>{doctor.createdAt}</td>
         <td>

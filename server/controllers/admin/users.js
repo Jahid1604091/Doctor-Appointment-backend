@@ -10,7 +10,10 @@ export const get_all_users = asyncHandler(async (req, res) => {
 
 //private by admin -> api/admin/doctors
 export const get_all_doctors = asyncHandler(async (req, res) => {
-    const doctors = await Doctor.find({});
+    // const doctors = await Doctor.find({},{createdAt:0,updatedAt:0,__v:0}).populate({path:'user',select:'name -_id'});
+    // const doctors = await Doctor.find({},{createdAt:0,updatedAt:0,__v:0}).populate('user',['name','email']);
+    // const doctors = await Doctor.find({},{createdAt:0,updatedAt:0,__v:0}).explain('queryPlanner');
+    const doctors = await Doctor.find({}).populate({path:'user',select:'name'});
     res.status(200).json(doctors);
 });
 

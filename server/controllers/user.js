@@ -3,6 +3,7 @@ import { User } from "../models/user.js";
 import { Doctor } from "../models/doctor.js";
 import { Appointment } from "../models/Appointment.js";
 import moment from "moment-timezone";
+
 //public -> api/users/auth
 export const auth_user = asyncHandler(async (req, res) => {
 
@@ -42,12 +43,14 @@ export const logout = asyncHandler(async (req, res) => {
 
 //public -> api/users
 export const register = asyncHandler(async (req, res) => {
+   
     const isExist = await User.findOne({ email: req.body.email });
     if (isExist) {
         res.status(400);
         throw new Error('User Already Exist')
     }
     const user = await User.create(req.body);
+ 
     if (user) {
         res.cookie('jwt', user.getSignedJwtToken(), {
             httpOnly: true,

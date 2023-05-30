@@ -2,93 +2,99 @@ import { apiSlice } from "./apiSlice";
 const URL = '/api/users';
 
 export const userApiSlice = apiSlice.injectEndpoints({
-    endpoints:(builder)=>({
-        
-        login:builder.mutation({
-            query:(data)=>({
-                url:`${URL}/auth`,
-                method:'POST',
-                body:data
+    endpoints: (builder) => ({
+
+        login: builder.mutation({
+            query: (data) => ({
+                url: `${URL}/auth`,
+                method: 'POST',
+                body: data
             }),
-            invalidatesTags:['User']
+            invalidatesTags: ['User']
         }),
 
-        register:builder.mutation({
-            query:(data)=>({
-                url:`${URL}`,
-                method:'POST',
-                body:data
+        register: builder.mutation({
+            query: (data) => ({
+                url: `${URL}`,
+                method: 'POST',
+                body: data
             }),
-            invalidatesTags:['User']
+            invalidatesTags: ['User']
         }),
 
-        registerAsDoctor:builder.mutation({
-            query:(data)=>({
-                url:`${URL}/apply-as-doctor`,
-                method:'POST',
-                body:data
+        registerAsDoctor: builder.mutation({
+            query: (data) => ({
+                url: `${URL}/apply-as-doctor`,
+                method: 'POST',
+                body: data
             }),
-            invalidatesTags:['User']
+            invalidatesTags: ['User']
         }),
 
-        updateProfile:builder.mutation({
-            query:(data)=>({
-                url:`${URL}/profile`,
-                method:'PUT',
-                body:data
+        updateProfile: builder.mutation({
+            query: (data) => ({
+                url: `${URL}/profile`,
+                method: 'PUT',
+                body: data
             }),
-            invalidatesTags:['User']
+            invalidatesTags: ['User']
         }),
 
-        deleteProfile:builder.mutation({
-            query:()=>({
-                url:`${URL}/profile`,
-                method:'DELETE',
+        deleteProfile: builder.mutation({
+            query: () => ({
+                url: `${URL}/profile`,
+                method: 'DELETE',
             }),
-            invalidatesTags:['User']
+            invalidatesTags: ['User']
         }),
-        
-        markAllAsRead:builder.mutation({
-            query:()=>({
-                url:`${URL}/mark-all-as-read`,
-                method:'PUT',
+
+        markAllAsRead: builder.mutation({
+            query: () => ({
+                url: `${URL}/mark-all-as-read`,
+                method: 'PUT',
             }),
-            invalidatesTags:['User']
+            invalidatesTags: ['User']
         }),
-        
+
         getAllApprovedDoctors: builder.query({
-            query:()=> `${URL}/approved-doctors`,
-            providesTags:['User']
-        }),
-        
-        
-        getAllAppointments: builder.query({
-            query:()=> `${URL}/booked-appointments`,
-            providesTags:['User']
-        }),
-        
-        newAppointment:builder.mutation({
-            query:(data)=>({
-                url:`${URL}/appointment`,
-                method:'POST',
-                body:data
-            }),
-            invalidatesTags:['User']
+            query: () => `${URL}/approved-doctors`,
+            // transformResponse: (response, meta, arg) => response.data,
+            // transformErrorResponse: (response, meta, arg) => response.status,
+            providesTags: (result, error, id) => [{ type: 'User', id }],
+  
+
+  
+
         }),
 
-        logout:builder.mutation({
-            query:()=>({
-                url:`${URL}/logout`,
-                method:'POST',
+
+        getAllAppointments: builder.query({
+            query: () => `${URL}/booked-appointments`,
+            providesTags: ['User']
+        }),
+
+        newAppointment: builder.mutation({
+            query: (data) => ({
+                url: `${URL}/appointment`,
+                method: 'POST',
+                body: data
             }),
-            invalidatesTags:['User']
+            invalidatesTags: ['User']
+        }),
+
+        logout: builder.mutation({
+            query: () => ({
+                url: `${URL}/logout`,
+                method: 'POST',
+            }),
+            invalidatesTags: ['User']
         }),
 
     })
 });
 
 export const {
-    useLoginMutation, 
+    useLoginMutation,
     useRegisterMutation,
     useRegisterAsDoctorMutation,
     useUpdateProfileMutation,
