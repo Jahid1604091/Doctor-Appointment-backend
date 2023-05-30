@@ -35,6 +35,7 @@ function Login() {
   };
   return (
     <FormContainer>
+        <h3 className="text-center my-1">Login</h3>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
           <Form.Label>Email address</Form.Label>
@@ -73,13 +74,9 @@ function Login() {
         )}
       </Form>
 
-      <Row>
-        <Col>
-          <p>
-            New Customer ? <Link to="/register">Register</Link>
-          </p>
-        </Col>
-      </Row>
+      <p>
+        New Customer ? <Link to="/register">Register</Link>
+      </p>
     </FormContainer>
   );
 }

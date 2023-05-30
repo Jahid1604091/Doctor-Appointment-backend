@@ -8,9 +8,25 @@ import { logout } from "../slices/authSlice";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { GrNotification } from "react-icons/gr";
-import { IconContext } from "react-icons";
-
+import { useEffect, useRef, useState } from "react";
+import {FaBars} from 'react-icons/fa';
+import { links } from "../data";
+import logo from '../assets/logo.png';
 function Header() {
+  const [showLinks, setShowLinks] = useState(false);
+  const linksContainerRef = useRef(null);
+  const linksRef = useRef(null);
+
+  useEffect(() => {
+    const linksHeight = linksRef.current.getBoundingClientRect().height;
+    if (showLinks) {
+      linksContainerRef.current.style.height = `${linksHeight}px`;
+    } else {
+      linksContainerRef.current.style.height = "0px";
+    }
+    console.log(linksHeight);
+  }, [showLinks]);
+
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -28,75 +44,113 @@ function Header() {
   };
   return (
     <Wrapper>
-      <Navbar collapseOnSelect expand="lg">
-        <Container>
-          <Navbar.Brand href="/">Sample Auth </Navbar.Brand>
-          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
-          <Navbar.Collapse id="responsive-navbar-nav">
-            <Nav className="me-auto">
-              <Link to="/about">About</Link>
-            </Nav>
-            <Nav className="notification">
-              <Link to="/notifications">
-                <GrNotification/> <span>{userInfo?.unseenNotifications ? userInfo?.unseenNotifications.length : 0}</span>
-              </Link>
-            </Nav>
-
-            <Nav>
-              {userInfo ? (
-                <NavDropdown title={userInfo?.name} className="nav-dropdown">
-                  <NavDropdown.Item
-                    className="nav-item"
-                    onClick={logoutHandler}
-                  >
-                    Logout
-                  </NavDropdown.Item>
-                </NavDropdown>
-              ) : (
-                <>
-                  <p className="text-light">Guest</p>
-                </>
-              )}
-            </Nav>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
+      <nav>
+        <div className="nav-center">
+          <div className="nav-header">
+            <img src={logo} alt="" className="logo" />
+            <button
+              className="nav-toggle"
+              onClick={() => setShowLinks(!showLinks)}
+            >
+              <FaBars />
+            </button>
+          </div>
+          <div className="links-container" ref={linksContainerRef}>
+            <ul className="links" ref={linksRef}>
+              {links.map((link) => {
+                return (
+                  <li key={link.id}>
+                    <a href="#">{link.text}</a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
+      </nav>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.section`
-  height: 10vh;
-  background-color: var(--clr-grey-1);
-  color: var(--clr-primary-10);
-  box-shadow: var(--light-shadow);
-  .notification {
-    font-size: 22px;
-  }
-  a {
-    &:hover {
-      color: var(--clr-primary-2);
-    }
-  }
-  .nav-dropdown,
-  .nav-link,
-  .nav-link.show {
+  nav {
+    background: var(--clr-white);
     box-shadow: var(--light-shadow);
-    color: var(--clr-primary-10);
-    &:hover {
-      color: var(--clr-primary-10);
+  }
+  .nav-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+  }
+  .nav-toggle {
+    font-size: 1.5rem;
+    color: var(--clr-primary-5);
+    background: transparent;
+    border-color: transparent;
+    transition: var(--transition);
+    cursor: pointer;
+  }
+  .nav-toggle:hover {
+    color: var(--clr-primary-1);
+    transform: rotate(90deg);
+  }
+  .logo {
+    height: 40px;
+  }
+  .links a {
+    color: var(--clr-grey-3);
+    font-size: 1rem;
+    text-transform: capitalize;
+    letter-spacing: var(--spacing);
+    display: block;
+    padding: 0.5rem 1rem;
+    transition: var(--transition);
+  }
+  .links a:hover {
+    background: var(--clr-primary-8);
+    color: var(--clr-primary-5);
+    padding-left: 1.5rem;
+  }
+
+  .links-container {
+    height: 0;
+    overflow: hidden;
+    transition: var(--transition);
+  }
+  .show-container {
+    height: 10rem;
+  }
+  @media screen and (min-width: 800px) {
+    .nav-center {
+      max-width: 1170px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
     }
-    .nav-item,
-    .nav-item a {
-      color: var(--clr-primary-10);
-      &:hover {
-        color: var(--clr-primary-2);
-      }
+    .nav-header {
+      padding: 0;
     }
-    .dropdown-menu {
-      background-color: var(--clr-primary-2);
-      color: var(--clr-primary-10);
+    .nav-toggle {
+      display: none;
     }
+    .links-container {
+      height: auto !important;
+    }
+    .links {
+      display: flex;
+    }
+    .links a {
+      padding: 0;
+      margin: 0 0.5rem;
+    }
+    .links a:hover {
+      padding: 0;
+      background: transparent;
+    }
+
   }
 `;
 

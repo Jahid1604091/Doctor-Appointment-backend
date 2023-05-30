@@ -38,6 +38,7 @@ function Register() {
 }
   return (
     <FormContainer>
+         <h3 className="text-center my-1">Register</h3>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
           <Form.Label>Name</Form.Label>
