@@ -1,5 +1,4 @@
 import React from "react";
-import Layout from "../components/Layout";
 import {
   useGetAllAppointmentsQuery,
   useGetAllApprovedDoctorsQuery,
@@ -8,6 +7,7 @@ import { Button, Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import moment from "moment";
 import { BiTimeFive } from "react-icons/bi";
+import Layout from "../components/Layout";
 
 export default function Appointments() {
   const { data } = useGetAllAppointmentsQuery();
@@ -17,12 +17,10 @@ export default function Appointments() {
     return user?.user.name;
   }
 
-  
   return (
     <Layout>
-      <Container>
-        <Row>
-          {data?.map((appointment, idx) => {
+  
+          {data?.map((appointment) => {
             return (
               <Col key={appointment._id} md={4}>
                 <Card className="card my-4">
@@ -60,8 +58,7 @@ export default function Appointments() {
               </Col>
             );
           })}
-        </Row>
-      </Container>
+      
     </Layout>
   );
 }

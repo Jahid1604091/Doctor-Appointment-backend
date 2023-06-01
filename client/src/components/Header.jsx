@@ -9,9 +9,9 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { GrNotification } from "react-icons/gr";
 import { useEffect, useRef, useState } from "react";
-import {FaBars} from 'react-icons/fa';
+import { FaBars } from "react-icons/fa";
 import { links } from "../data";
-import logo from '../assets/logo.png';
+import logo from "../assets/logo.png";
 function Header() {
   const [showLinks, setShowLinks] = useState(false);
   const linksContainerRef = useRef(null);
@@ -24,7 +24,7 @@ function Header() {
     } else {
       linksContainerRef.current.style.height = "0px";
     }
-    console.log(linksHeight);
+    
   }, [showLinks]);
 
   const { userInfo } = useSelector((state) => state.auth);
@@ -44,6 +44,7 @@ function Header() {
   };
   return (
     <Wrapper>
+     
       <nav>
         <div className="nav-center">
           <div className="nav-header">
@@ -57,13 +58,27 @@ function Header() {
           </div>
           <div className="links-container" ref={linksContainerRef}>
             <ul className="links" ref={linksRef}>
-              {links.map((link) => {
-                return (
-                  <li key={link.id}>
-                    <a href="#">{link.text}</a>
+            <li>Welcome, {userInfo?.name}</li>
+              {userInfo && (
+                <>
+                  <li className="notification-icon">
+                    <Link to="/notifications">
+                      <GrNotification />{" "}
+                      <span className="notification-number">
+                        {userInfo?.unseenNotifications
+                          ? userInfo?.unseenNotifications.length
+                          : 0}
+                      </span>
+                    </Link>
                   </li>
-                );
-              })}
+
+                  <li>
+                    <a href="#" onClick={logoutHandler}>
+                      Logout
+                    </a>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </div>
@@ -76,6 +91,10 @@ const Wrapper = styled.section`
   nav {
     background: var(--clr-white);
     box-shadow: var(--light-shadow);
+    position: fixed;
+    width: 100vw;
+    z-index: 999;
+    
   }
   .nav-header {
     display: flex;
@@ -117,6 +136,18 @@ const Wrapper = styled.section`
     height: 0;
     overflow: hidden;
     transition: var(--transition);
+    
+    .notification-icon{
+      position: relative;
+      .notification-number{
+        color: var(--clr-primary-2);
+        position: absolute;
+        top: -3px;
+      
+      }
+
+    }
+
   }
   .show-container {
     height: 10rem;
@@ -150,7 +181,6 @@ const Wrapper = styled.section`
       padding: 0;
       background: transparent;
     }
-
   }
 `;
 
