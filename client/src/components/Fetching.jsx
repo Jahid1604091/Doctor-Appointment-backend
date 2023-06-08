@@ -3,17 +3,15 @@ import Layout from "./Layout";
 import { Col, Container, Row } from "react-bootstrap";
 import styled from "styled-components";
 
-export default function Loader() {
+export default function Fetching() {
   return (
     <Layout>
       <Wrapper>
         <Container>
           <Row>
             <Col>
-              <div className="spinner d-flex justify-content-center">
-                <div className="spinner-border" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </div>
+              <div className="fetching d-flex justify-content-center">
+                <h3>Fetching Data...</h3>
               </div>
             </Col>
           </Row>
@@ -24,8 +22,8 @@ export default function Loader() {
 }
 
 const Wrapper = styled.section`
-  .spinner {
+  .fetching {
     margin-top: 10rem;
-    font-size: 150px;
+    
   }
 `;

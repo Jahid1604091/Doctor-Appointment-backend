@@ -7,7 +7,7 @@ const doctorSchema = mongoose.Schema({
     // },
     user:{
         type:mongoose.Types.ObjectId,
-        ref:'User'
+        ref:'UserDetails'
     },
     email:{
         type:String,

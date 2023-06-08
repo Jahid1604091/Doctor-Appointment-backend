@@ -18,7 +18,7 @@ import PrivateRoute from "./components/PrivateRoute.jsx";
 import UpdateProfile from "./pages/UpdateProfile.jsx";
 import About from "./pages/About.jsx";
 import ApplyAsDoctor from "./pages/ApplyAsDoctor.jsx";
-import NotFound from "./pages/NotFound.jsx";
+import NotFound from "./components/NotFound.jsx";
 import Notifications from "./pages/Notifications.jsx";
 import Users from "./pages/admin/Users.jsx";
 import Doctors from "./pages/admin/Doctors.jsx";

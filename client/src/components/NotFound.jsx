@@ -3,17 +3,16 @@ import Layout from "./Layout";
 import { Col, Container, Row } from "react-bootstrap";
 import styled from "styled-components";
 
-export default function Loader() {
+export default function NotFound({children}) {
   return (
     <Layout>
       <Wrapper>
         <Container>
           <Row>
             <Col>
-              <div className="spinner d-flex justify-content-center">
-                <div className="spinner-border" role="status">
-                  <span className="visually-hidden">Loading...</span>
-                </div>
+              <div className="NotFound text-center">
+                <h3 className="text-danger p-2">404 !</h3>
+                <h4>{children}</h4>
               </div>
             </Col>
           </Row>
@@ -24,8 +23,8 @@ export default function Loader() {
 }
 
 const Wrapper = styled.section`
-  .spinner {
+  .NotFound {
     margin-top: 10rem;
-    font-size: 150px;
+    
   }
 `;

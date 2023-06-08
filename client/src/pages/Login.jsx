@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useLoginMutation } from "../slices/userApiSlice";
 import { setCredentials } from "../slices/authSlice";
+import { toast } from "react-hot-toast";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -29,13 +30,15 @@ function Login() {
       const res = await login({ email, password }).unwrap();
       dispatch(setCredentials({ ...res.data }));
       navigate("/");
+      toast.success("Logged In!");
     } catch (error) {
-      console.log(error?.data?.message || error.error);
+      toast.error(error.data?.msg);
+      console.log(error?.data?.msg || error.error);
     }
   };
   return (
     <FormContainer>
-        <h3 className="text-center my-1">Login</h3>
+      <h3 className="text-center my-1">Login</h3>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
           <Form.Label>Email address</Form.Label>
@@ -67,7 +70,7 @@ function Login() {
             />
             Loading...
           </Button>
-        ) : (
+        ) :  (
           <Button variant="primary" type="submit">
             Submit
           </Button>

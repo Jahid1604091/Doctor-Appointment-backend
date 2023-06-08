@@ -123,10 +123,10 @@ export default function Sidebar() {
 
 const Wrapper = styled.section`
   aside {
-    height: 100vh;
+    height: 85vh;
     background-color: var(--clr-primary-2);
     color: var(--clr-primary-10);
-    border: 1px solid var(--clr-primary-2);
+    
     /* position: fixed; */
     z-index: 1;
     left: 0;

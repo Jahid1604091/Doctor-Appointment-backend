@@ -16,7 +16,7 @@ export default function Layout({ children }) {
     <Wrapper>
       <Container fluid>
         <Row>
-          <Col md={3}>
+          <Col md={collapsedSidebar ? 1 : 3}>
             <div
               className={`${
                 collapsedSidebar ? "collapsed-sidebar" : "open-sidebar"
@@ -26,7 +26,7 @@ export default function Layout({ children }) {
             </div>
           </Col>
 
-          <Col md={9}>
+          <Col md={collapsedSidebar ? 11 : 9}>
             <div
               className={`main ${
                 collapsedSidebar ? "open-main" : "collapsed-main"
@@ -42,24 +42,24 @@ export default function Layout({ children }) {
 }
 
 const Wrapper = styled.section`
+    
   .main {
     /* margin-right: auto; */
-   
-
   }
   .open-main {
-    width: 80vw;
     transition: var(--transition);
     margin-top: 5rem;
+   
   }
   .collapsed-sidebar {
-    transition: var(--transition);
+   
     margin-top: 5rem;
-    width: 8vw;
+    width: 60px;
   }
   .collapsed-main {
-    transition: var(--transition);
+   
     margin-top: 5rem;
+
   }
   .open-sidebar {
     width: 20vw;

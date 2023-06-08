@@ -7,6 +7,8 @@ import { useGetAllApprovedDoctorsQuery } from "../slices/userApiSlice";
 import { Link } from "react-router-dom";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
+import Fetching from "../components/Fetching";
+import NotFound from "../components/NotFound";
 
 export default function Home() {
   const {
@@ -14,22 +16,25 @@ export default function Home() {
     isLoading,
     isFetching,
     isError,
+    error,
   } = useGetAllApprovedDoctorsQuery();
-  if (isError) return <Error />;
+
+  if (isError) return <Error error={error} />;
+  if (data.length === 0) return <NotFound>No Approved Doctor Found!</NotFound>;
   if (isLoading) return <Loader />;
+  if (isFetching) return <Fetching />;
 
   return (
     <Layout>
       <Wrapper>
-        <Row>
-          {data?.map((doctor) => {
-            return (
-              
+        <Container>
+          <Row className="">
+            {data?.map((doctor) => {
+              return (
                 <Col sm={4} key={doctor._id}>
-                  <div  disabled={isFetching}>
+                  <div disabled={isFetching}>
                     <Card className="card mb-3">
                       <Card.Img
-                        
                         variant="top"
                         src="https://images.pexels.com/photos/4560086/pexels-photo-4560086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=500&dpr=1"
                         className="avatar"
@@ -42,17 +47,19 @@ export default function Home() {
                         <Card.Text>
                           <span>Fee Per Visit (BDT) : {doctor.fee}</span>
                         </Card.Text>
-                        <Link to={`doctors/${doctor._id}`} className="btn">
-                          Appoint Now
-                        </Link>
+                        <div className="text-center">
+                          <Link to={`doctors/${doctor._id}`} className="btn btn-outline-primary">
+                            Appoint Now
+                          </Link>
+                        </div>
                       </Card.Body>
                     </Card>
                   </div>
                 </Col>
-             
-            );
-          })}
-        </Row>
+              );
+            })}
+          </Row>
+        </Container>
       </Wrapper>
     </Layout>
   );
@@ -60,7 +67,6 @@ export default function Home() {
 
 const Wrapper = styled.section`
   .card {
-   
     .avatar {
     }
   }

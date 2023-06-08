@@ -4,8 +4,10 @@ import styled from "styled-components";
 import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { useRegisterAsDoctorMutation } from "../slices/userApiSlice";
-import { Space, TimePicker } from "antd";
-import moment from "moment/moment";
+import {  TimePicker } from "antd";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+
 export default function ApplyAsDoctor() {
   const { userInfo } = useSelector((state) => state.auth);
   const [registerAsDoctor, { isLoading, isError, error }] =
@@ -17,8 +19,7 @@ export default function ApplyAsDoctor() {
     fee: "",
   });
 
-  const [startTime,setStartTime] = useState();
-  const [endTime,setEndTime] = useState();
+  
   
   const [timeRange, setTimeRange] = useState();
 
@@ -30,20 +31,29 @@ export default function ApplyAsDoctor() {
     setInfo({ ...info, [e.target.name]: e.target.value });
   };
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await registerAsDoctor({
-      ...info,
-      timings:timeRange,
-      email: userInfo?.email,
-    });
-    // console.log({...info,timeRange});
-    //set alert
+    try {
+      const res = await registerAsDoctor({
+        ...info,
+        timings:timeRange,
+        email: userInfo?.email,
+      });
+      navigate('/');
+      toast.success('Applied Successfully ! Wait For Confirmation');
+    } catch (error) {
+      toast.error(error.data?.msg);
+      console.log(error?.data?.message || error.error);
+    }
+ 
   };
   return (
     <Wrapper>
       <Layout>
         <Container>
+        <h3>Apply as Doctor</h3> <hr />
           <Form onSubmit={handleSubmit}>
             <Row className="mb-3">
               <Form.Group as={Col} controlId="formGridEmail">

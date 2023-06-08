@@ -12,6 +12,7 @@ import { useEffect, useRef, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { links } from "../data";
 import logo from "../assets/logo.png";
+import { toast } from "react-hot-toast";
 function Header() {
   const [showLinks, setShowLinks] = useState(false);
   const linksContainerRef = useRef(null);
@@ -38,29 +39,32 @@ function Header() {
       await logoutApi().unwrap();
       dispatch(logout());
       navigate("/login");
+      toast('Logged Out !')
     } catch (error) {
       console.log(error.message);
     }
   };
   return (
     <Wrapper>
-     
       <nav>
         <div className="nav-center">
-          <div className="nav-header">
+          <div className="nav-header d-flex justify-content-between">
             <img src={logo} alt="" className="logo" />
-            <button
+            <h3>Doctor Portal</h3>
+            {userInfo && <button
               className="nav-toggle"
               onClick={() => setShowLinks(!showLinks)}
             >
               <FaBars />
-            </button>
+            </button>}
+              
           </div>
           <div className="links-container" ref={linksContainerRef}>
             <ul className="links" ref={linksRef}>
-            <li>Welcome, {userInfo?.name}</li>
+            
               {userInfo && (
                 <>
+                <li> {userInfo?.name}</li>
                   <li className="notification-icon">
                     <Link to="/notifications">
                       <GrNotification />{" "}
@@ -117,6 +121,9 @@ const Wrapper = styled.section`
   .logo {
     height: 40px;
   }
+  .links{
+    text-align: center !important;
+  }
   .links a {
     color: var(--clr-grey-3);
     font-size: 1rem;
@@ -125,6 +132,7 @@ const Wrapper = styled.section`
     display: block;
     padding: 0.5rem 1rem;
     transition: var(--transition);
+    
   }
   .links a:hover {
     background: var(--clr-primary-8);
@@ -172,6 +180,7 @@ const Wrapper = styled.section`
     }
     .links {
       display: flex;
+     
     }
     .links a {
       padding: 0;

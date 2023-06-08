@@ -60,13 +60,8 @@ export const userApiSlice = apiSlice.injectEndpoints({
             query: () => `${URL}/approved-doctors`,
             // transformResponse: (response, meta, arg) => response.data,
             // transformErrorResponse: (response, meta, arg) => response.status,
-            providesTags: (result, error, id) => [{ type: 'User', id }],
-  
-
-  
-
+            providesTags:['User'],
         }),
-
 
         getAllAppointments: builder.query({
             query: () => `${URL}/booked-appointments`,

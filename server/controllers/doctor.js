@@ -17,19 +17,28 @@ export const checkAvailability = asyncHandler(async (req, res) => {
     const from_time = moment(time).subtract(1, 'hours');
     const to_time = moment(time).add(1, 'hours');
 
-    const appointments = await Appointment.find(
-        {
-            date: moment(date).format('YYYY-MM-DD'), time: { $gte: from_time, $lt: to_time }
-        }
-    );
+    //saved in DB as 6 hrs ahead than us
+    const appointments = await Appointment.find({
+        date:moment(date).format('YYYY-MM-DD'),
+        doctor,
+        $or:[
+            {time: { $lt: time , $gt:from_time}},
+            {time: { $gt: time, $lt: to_time }},
 
-    if (appointments.length > 0) {
+        ]
+    });
+    // res.json({ appointments })
+    if (appointments.length === 0) {
         res.status(200).json({
-            success:true 
+            success: true,
+            msg: 'Appointment available',
         })
     }
     else {
-        res.status(400).json('Appointment not available')
+        res.status(400).json({
+            success: false,
+            msg: 'Appointment Not available',
+        })
 
     }
 

@@ -77,5 +77,4 @@ userSchema.methods.getSignedJwtToken = function () {
 }
 
 
-export const User = mongoose.model('User', userSchema);
-
+export const UserDetails = mongoose.model('UserDetails', userSchema);

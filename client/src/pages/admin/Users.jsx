@@ -2,6 +2,7 @@ import React from "react";
 import Layout from "../../components/Layout";
 import { Table } from "react-bootstrap";
 import { useGetAllUsersQuery } from "../../slices/adminApiSlice";
+import NotFound from "../../components/NotFound";
 
 export default function Users() {
   const { data } = useGetAllUsersQuery();
@@ -16,6 +17,7 @@ export default function Users() {
       </tr>
     );
   });
+  if (data?.length === 0) return <NotFound>No User Found!</NotFound>
 
   return (
     <Layout>

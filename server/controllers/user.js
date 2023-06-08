@@ -1,14 +1,17 @@
 import asyncHandler from "express-async-handler";
-import { User } from "../models/user.js";
 import { Doctor } from "../models/doctor.js";
 import { Appointment } from "../models/Appointment.js";
-import moment from "moment-timezone";
+
+import { UserDetails } from "../models/UserDetails.js";
+import moment from "moment";
+
+
 
 //public -> api/users/auth
 export const auth_user = asyncHandler(async (req, res) => {
 
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    const user = await UserDetails.findOne({ email });
 
 
     if (user && (await user.matchPassword(password))) {
@@ -43,32 +46,38 @@ export const logout = asyncHandler(async (req, res) => {
 
 //public -> api/users
 export const register = asyncHandler(async (req, res) => {
-   
-    const isExist = await User.findOne({ email: req.body.email });
-    if (isExist) {
-        res.status(400);
-        throw new Error('User Already Exist')
-    }
-    const user = await User.create(req.body);
- 
-    if (user) {
-        res.cookie('jwt', user.getSignedJwtToken(), {
-            httpOnly: true,
-            secure: process.env.NODE_ENV !== 'development',
-            sameSite: 'strict',
-            maxAge: 30 * 24 * 24 * 60 * 60
-        })
-        return res.status(201).json({
-            success: true,
-            data: user,
-            token: user.getSignedJwtToken()
-        });
 
+    try {
+        const isExist = await UserDetails.findOne({ email: req.body.email });
+        if (isExist) {
+            res.status(400);
+            throw new Error('User Already Exist')
+        }
+        const user = await UserDetails.create(req.body);
+
+        if (user) {
+            res.cookie('jwt', user.getSignedJwtToken(), {
+                httpOnly: true,
+                secure: process.env.NODE_ENV !== 'development',
+                sameSite: 'strict',
+                maxAge: 30 * 24 * 24 * 60 * 60
+            })
+            return res.status(201).json({
+                success: true,
+                data: user,
+                token: user.getSignedJwtToken()
+            });
+
+        }
+        else {
+            res.status(400);
+            throw new Error('Invalid Data');
+        }
+    } catch (error) {
+        const errors = Object.values(error.errors)
+        res.status(400).json({msg:errors[0].message})
     }
-    else {
-        res.status(400);
-        throw new Error('Invalid Data');
-    }
+
 });
 
 //private -> api/users/profile/
@@ -78,7 +87,7 @@ export const get_profile = asyncHandler(async (req, res) => {
 
 //private -> api/users/profile/
 export const update_profile = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.user);
+    const user = await UserDetails.findById(req.user);
     if (!user) {
         throw new Error('User not found', 404);
     }
@@ -98,7 +107,7 @@ export const update_profile = asyncHandler(async (req, res) => {
 //private -> api/users/profile/
 export const delete_profile = asyncHandler(async (req, res) => {
 
-    const user = await User.findById(req.user);
+    const user = await UserDetails.findById(req.user);
 
     if (!user) {
         throw new Error('User not found', 404);
@@ -106,7 +115,7 @@ export const delete_profile = asyncHandler(async (req, res) => {
     }
     else {
 
-        const deletedUser = await User.findByIdAndRemove(req.user);
+        const deletedUser = await UserDetails.findByIdAndRemove(req.user);
         return res.status(200).json({
             success: true,
             data: deletedUser.name + ' is removed!'
@@ -133,10 +142,10 @@ export const register_as_doctor = asyncHandler(async (req, res) => {
 
     if (newDoctor) {
         //find user details
-        const user = await User.findById(req.user._id);
+        const user = await UserDetails.findById(req.user._id);
 
         //send apply notification to admin
-        const admin = await User.findOne({ role: 'admin' });
+        const admin = await UserDetails.findOne({ role: 'admin' });
         const unseenNotifications = admin.unseenNotifications;
 
         unseenNotifications.push({
@@ -149,7 +158,7 @@ export const register_as_doctor = asyncHandler(async (req, res) => {
             clickPath: '/admin/doctors'
         });
 
-        await User.findByIdAndUpdate(admin._id, { unseenNotifications });
+        await UserDetails.findByIdAndUpdate(admin._id, { unseenNotifications });
 
 
         return res.status(201).json({
@@ -166,7 +175,7 @@ export const register_as_doctor = asyncHandler(async (req, res) => {
 
 //private -> api/users/mark-all-as-read
 export const markAllAsRead = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.user);
+    const user = await UserDetails.findById(req.user);
     const unseenNotifications = user.unseenNotifications;
     const seenNotifications = user.seenNotifications;
     seenNotifications.push(...unseenNotifications);
@@ -190,14 +199,15 @@ export const new_appointment = asyncHandler(async (req, res) => {
     // }
     const { time, date } = req.body;
     const doctor = await Doctor.findById(req.body.doctor);
-    const doctor_user_table = await User.findById(doctor.user);
+    const doctor_user_table = await UserDetails.findById(doctor.user);
     // const Asia_time = new Date(req.body.time.getTime() - (req.body.time.offset * 60000));
 
     delete req.body.date;
 
     const newAppointment = new Appointment({
         ...req.body,
-        date:moment(date).format('YYYY-MM-DD'),
+        date: moment(date).format('YYYY-MM-DD'),
+        time,
         status: "pending"
     });
 
@@ -207,7 +217,7 @@ export const new_appointment = asyncHandler(async (req, res) => {
     if (newAppointment) {
 
         //User who applying for appointment (patient)
-        const user = await User.findById(req.body.user);
+        const user = await UserDetails.findById(req.body.user);
 
         //send appointment notification to doctor
         const unseenNotifications = doctor_user_table.unseenNotifications;
@@ -222,7 +232,7 @@ export const new_appointment = asyncHandler(async (req, res) => {
 
         return res.status(201).json({
             success: true,
-            data:doctor_user_table
+            data: doctor_user_table
         });
 
     }
@@ -234,8 +244,8 @@ export const new_appointment = asyncHandler(async (req, res) => {
 
 //private -> api/users/booked-appointments/
 export const booked_appointments = asyncHandler(async (req, res) => {
-   const appointments = await Appointment.find({user:req.user._id}).populate('doctor');
-   res.status(200).json(appointments)
+    const appointments = await Appointment.find({ user: req.user._id }).populate('doctor');
+    res.status(200).json(appointments)
 });
 
 

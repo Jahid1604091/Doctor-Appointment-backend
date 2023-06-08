@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRegisterMutation } from "../slices/userApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-hot-toast";
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -15,30 +16,30 @@ function Register() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const {userInfo} = useSelector(state=>state.auth);
- 
+  const { userInfo } = useSelector((state) => state.auth);
 
-  useEffect(()=>{
-      if(userInfo){
-          navigate('/');
-      }
-  },[userInfo,navigate]);
-  const [register,{isLoading}] = useRegisterMutation();
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/");
+    }
+  }, [userInfo, navigate]);
+  const [register, { isLoading }] = useRegisterMutation();
 
-  const handleSubmit = async(e) =>{
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        const res = await register({email,password,name}).unwrap();
-        dispatch(setCredentials({...res.data}));
-        navigate('/');
-        
+      const res = await register({ email, password, name }).unwrap();
+      dispatch(setCredentials({ ...res.data }));
+      navigate("/");
+      toast.success('Successfully added!')
     } catch (error) {
-        console.log(error?.data?.message || error.error);
+      toast.error(error.data?.msg);
+      // console.log(error?.data?.message || error.error);
     }
-}
+  };
   return (
     <FormContainer>
-         <h3 className="text-center my-1">Register</h3>
+      <h3 className="text-center my-1">Register</h3>
       <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3">
           <Form.Label>Name</Form.Label>
@@ -70,21 +71,22 @@ function Register() {
           />
         </Form.Group>
 
-        {
-        isLoading ? <Button variant="primary" disabled>
-        <Spinner
-          as="span"
-          animation="grow"
-          size="sm"
-          role="status"
-          aria-hidden="true"
-        />
-        Loading...
-      </Button> :
-       <Button variant="primary" type="submit">
-       Submit
-     </Button>
-    }
+        {isLoading ? (
+          <Button variant="primary" disabled>
+            <Spinner
+              as="span"
+              animation="grow"
+              size="sm"
+              role="status"
+              aria-hidden="true"
+            />
+            Loading...
+          </Button>
+        ) : (
+          <Button variant="primary" type="submit">
+            Submit
+          </Button>
+        )}
       </Form>
 
       <Row>
