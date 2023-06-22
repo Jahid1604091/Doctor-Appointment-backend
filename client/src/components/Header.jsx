@@ -11,7 +11,7 @@ import { GrNotification } from "react-icons/gr";
 import { useEffect, useRef, useState } from "react";
 import { FaBars } from "react-icons/fa";
 import { links } from "../data";
-import logo from "../assets/logo.png";
+import logo from "/logo.png";
 import { toast } from "react-hot-toast";
 function Header() {
   const [showLinks, setShowLinks] = useState(false);

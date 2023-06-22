@@ -10,15 +10,14 @@ const appointmentSchema = mongoose.Schema({
         type:Schema.Types.ObjectId,
         ref:'Doctor',
     },
-    time:{
-        type:Date,
-        required:true,
-      
-    },
-    date:{
-        type:String,
-        required:true,
-    },
+    date: {
+        type: String,
+        required: true,
+      },
+      time: {
+        type: String,
+        required: true,
+      },
     status:{
         type:String,
         default:'pending'

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Layout from "../components/Layout";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   useCheckAvailabilityMutation,
   useGetDoctorByIdQuery,
@@ -17,53 +17,57 @@ export default function Appointment() {
   const { id } = useParams();
   const { userInfo } = useSelector((state) => state.auth);
   const { data } = useGetDoctorByIdQuery(id);
-  const [checkAvailability] = useCheckAvailabilityMutation();
+
   const [newAppointment] = useNewAppointmentMutation();
 
-  const timings = `${moment(data?.timings[0]).format("HH:MM a")} - ${moment(
+  const timings = `${moment(data?.timings[0]).format("hh:mm a")} - ${moment(
     data?.timings[1]
-  ).format("HH:MM a")}`;
+  ).format("hh:mm a")}`;
 
   const [date, setDate] = useState();
   const [time, setTime] = useState();
   const [available, setAvailable] = useState(false);
+  const [checkAvailability] = useCheckAvailabilityMutation();
 
-  const onTimeChange = (time) => {
-    setTime(time);
-  };
+  // const onTimeChange = (time,timString) => {
+  //   console.log(timeString)
+  // };
 
   const handleNewAppoint = async (e) => {
     e.preventDefault();
-    const {data} =await newAppointment({ doctor: id, user: userInfo._id, date, time });
-    if(data.success){
-      toast.success('Appointment Done ! Wait for Doctor respond');
+    const { data } = await newAppointment({
+      doctor: id,
+      user: userInfo._id,
+      date,
+      time,
+    });
+    if (data.success) {
+      toast.success("Appointment Done ! Wait for Doctor respond");
       setAvailable(false);
-    }
-    else{
-      toast.error('Something Wrong!');
+    } else {
+      toast.error("Something Wrong!");
       setAvailable(false);
     }
   };
 
   const handleCheck = async (e) => {
     e.preventDefault();
-    if(!time || !date){
-      toast.error('Please Select Time and Date');
-    }
-    else{
-      const {data,error} = await checkAvailability({
+    if (!time || !date) {
+      toast.error("Please Select Time and Date");
+    } else {
+     
+      const { data, error } = await checkAvailability({
         doctor: id,
         user: userInfo._id,
         date,
         time,
       });
-      
+
       if (data) {
-        toast.success(data?.msg)
+        toast.success(data?.msg);
         setAvailable(true);
-      }
-      else{
-        toast.error(error?.data?.msg)
+      } else {
+        toast.error(error?.data?.msg);
         setAvailable(false);
       }
     }
@@ -92,14 +96,17 @@ export default function Appointment() {
                     <DatePicker
                       className="rounded-0"
                       onChange={(v) => setDate(v)}
+                      format="DD-MM-YYYY"
                       required
                     />{" "}
                     <TimePicker
-                      className="my-1 rounded-0"
-                      use12Hours format="h:mm a" 
-                      onChange={onTimeChange}
-                      required
-                    />{" "}
+                      format="hh:mm a"
+                      className="mt-3"
+                      onChange={(value) => {
+                        // setIsAvailable(false);
+                        setTime(value);
+                      }}
+                    />
                     <br />
                     <div className="btn-group btn-group-sm my-2">
                       {!available && (

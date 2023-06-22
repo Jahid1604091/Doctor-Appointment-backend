@@ -13,31 +13,32 @@ export const get_doctor_by_id = asyncHandler(async (req, res) => {
 //private -> api/doctors/check-availability
 export const checkAvailability = asyncHandler(async (req, res) => {
 
-    const { user, doctor, time, date } = req.body;
-    const from_time = moment(time).subtract(1, 'hours');
-    const to_time = moment(time).add(1, 'hours');
+    const { user, doctor,date, time } = req.body;
+
+    // const {  } = req.query;
+    
+    
+    const from_time = moment(time,'hh:mm').subtract(10, 'minutes').toISOString();
+    const to_time = moment(time,"hh:mm").add(10, 'minutes').toISOString();
+    console.log(time)
+
+    const appointments = await Appointment.find({
+        date: moment(date).format('DD-MM-YYYY'),
+        time: { $gt: from_time, $lt: to_time }
+    });
 
     //saved in DB as 6 hrs ahead than us
-    const appointments = await Appointment.find({
-        date:moment(date).format('YYYY-MM-DD'),
-        doctor,
-        $or:[
-            {time: { $lt: time , $gt:from_time}},
-            {time: { $gt: time, $lt: to_time }},
-
-        ]
-    });
-    // res.json({ appointments })
+        // res.status(200).json(appointments)
     if (appointments.length === 0) {
         res.status(200).json({
             success: true,
-            msg: 'Appointment available',
+            msg: 'Can Appoint Now',
         })
     }
     else {
         res.status(400).json({
             success: false,
-            msg: 'Appointment Not available',
+            msg: 'Can Not Appoint On This Time',
         })
 
     }
