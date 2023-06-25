@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { useNewAppointmentMutation } from "../slices/userApiSlice";
 import styled from "styled-components";
 import { toast } from "react-hot-toast";
+import disabledDateTime from "../helpers/timeSpecify";
 
 export default function Appointment() {
   const { id } = useParams();
@@ -29,9 +30,6 @@ export default function Appointment() {
   const [available, setAvailable] = useState(false);
   const [checkAvailability] = useCheckAvailabilityMutation();
 
-  // const onTimeChange = (time,timString) => {
-  //   console.log(timeString)
-  // };
 
   const handleNewAppoint = async (e) => {
     e.preventDefault();
@@ -55,7 +53,6 @@ export default function Appointment() {
     if (!time || !date) {
       toast.error("Please Select Time and Date");
     } else {
-     
       const { data, error } = await checkAvailability({
         doctor: id,
         user: userInfo._id,
@@ -94,6 +91,12 @@ export default function Appointment() {
                   <div className="text-muted">{timings}</div> <br />
                   <div className="py-1 my-1">
                     <DatePicker
+                      autoFocus
+                      disabledDate={(d) =>
+                        d.isBefore(moment().subtract(1, "days")) ||
+                        d.isAfter(moment().add(6, "days"))
+                      }
+                      // defaultValue={moment()}
                       className="rounded-0"
                       onChange={(v) => setDate(v)}
                       format="DD-MM-YYYY"
@@ -101,11 +104,11 @@ export default function Appointment() {
                     />{" "}
                     <TimePicker
                       format="hh:mm a"
-                      className="mt-3"
+                      className="rounded-0 mt-1"
                       onChange={(value) => {
-                        // setIsAvailable(false);
                         setTime(value);
                       }}
+                      disabledTime={()=>disabledDateTime(data?.timings)}
                     />
                     <br />
                     <div className="btn-group btn-group-sm my-2">
