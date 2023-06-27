@@ -4,7 +4,6 @@ import {
   useGetAllApprovedDoctorsQuery,
 } from "../slices/userApiSlice";
 import { Button, Card, Col, Container, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import moment from "moment";
 import { BiTimeFive } from "react-icons/bi";
 import Layout from "../components/Layout";
@@ -42,7 +41,7 @@ export default function Appointments() {
                   </p>{" "}
                   <p className="fw-light">
                     <BiTimeFive size={18} />{" "}
-                    {moment(appointment.time).format("MMMM Do YYYY, h:mm a")}
+                    {moment(appointment.time).format("hh:mm a")}, {appointment.date}
                   </p>{" "}
                 </div>
                 <div className="text-center">

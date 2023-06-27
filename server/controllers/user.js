@@ -207,7 +207,7 @@ export const new_appointment = asyncHandler(async (req, res) => {
     const newAppointment = new Appointment({
         ...req.body,
         date: moment(date).format('DD-MM-YYYY'),
-        time:moment(time,'hh:mm').toISOString(),
+        time:moment(time,'hh:mm:ss').toISOString(),
         status: "pending"
     });
 
