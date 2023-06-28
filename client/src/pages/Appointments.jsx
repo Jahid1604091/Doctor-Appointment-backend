@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   useGetAllAppointmentsQuery,
   useGetAllApprovedDoctorsQuery,
 } from "../slices/userApiSlice";
-import { Button, Card, Col, Container, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Row, Tab, Tabs } from "react-bootstrap";
 import moment from "moment";
 import { BiTimeFive } from "react-icons/bi";
 import Layout from "../components/Layout";
 import NotFound from "../components/NotFound";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import AppointmentsAsDoctor from "../components/AppointmentsAsDoctor";
 
 export default function Appointments() {
   const { data } = useGetAllAppointmentsQuery();
+  const {userInfo} = useSelector(state=>state.auth);
+ 
   const { data: doctors } = useGetAllApprovedDoctorsQuery();
+
   if (data?.length === 0) return <NotFound>No Appointment Found!</NotFound>;
 
   const associate_doctor = (doctorId) => {
@@ -23,7 +29,10 @@ export default function Appointments() {
     <Layout>
       <h3>Appointments</h3> <hr />
       <Row>
-      {data?.map((appointment) => {
+
+      {userInfo?.isDoctor ?  <AppointmentsAsDoctor data={data} associate_doctor={associate_doctor}/> :
+
+      data?.map((appointment) => {
         return (
           <Col key={appointment._id} md={4}>
             <Card className="card my-4">

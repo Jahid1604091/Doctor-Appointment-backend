@@ -207,7 +207,7 @@ export const new_appointment = asyncHandler(async (req, res) => {
     const newAppointment = new Appointment({
         ...req.body,
         date: moment(date).format('DD-MM-YYYY'),
-        time:moment(time,'hh:mm:ss').toISOString(),
+        time:moment(time).toISOString(),
         status: "pending"
     });
 
@@ -242,8 +242,9 @@ export const new_appointment = asyncHandler(async (req, res) => {
     }
 });
 
-//private -> api/users/booked-appointments/
+//private -> api/users/booked-appointments?
 export const booked_appointments = asyncHandler(async (req, res) => {
+     //get appointments list as user
     const appointments = await Appointment.find({ user: req.user._id }).populate('doctor');
     res.status(200).json(appointments)
 });

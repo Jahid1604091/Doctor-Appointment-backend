@@ -10,7 +10,7 @@ export default function Sidebar() {
   const { pathname } = useLocation();
   const { collapsedSidebar } = useSelector((state) => state.app);
   const {
-    userInfo: { role },
+    userInfo: { role,isDoctor },
   } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
@@ -47,6 +47,11 @@ export default function Sidebar() {
       text: "Home",
       path: "/",
       icon: <FaTachometerAlt />,
+    }, {
+      id: 2,
+      text: "Appointments",
+      path: "/booked-appointments",
+      icon: <FaAdn />,
     },
 
     {
@@ -85,7 +90,7 @@ export default function Sidebar() {
   ];
 
   const menuToRender =
-    role === "user" ? userMenu : role === "admin" ? adminMenu : doctorMenu;
+    role === "user" && !isDoctor ? userMenu : role === "admin" ? adminMenu : doctorMenu;
 
   return (
     <Wrapper>
@@ -126,7 +131,7 @@ const Wrapper = styled.section`
     height: 85vh;
     background-color: var(--clr-primary-2);
     color: var(--clr-primary-10);
-    
+
     /* position: fixed; */
     z-index: 1;
     left: 0;
@@ -180,7 +185,6 @@ const Wrapper = styled.section`
       width: 95vw;
       height: 8vh;
       text-align: center;
-     
     }
     .links {
       list-style-type: none;
@@ -191,18 +195,18 @@ const Wrapper = styled.section`
       text-align: center;
       li {
         float: left;
-      
-          li a {
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 16px;
-            text-decoration: none;
-          }
-        
+
+        li a {
+          display: block;
+          color: white;
+          text-align: center;
+          padding: 16px;
+          text-decoration: none;
+        }
       }
     }
-    .menu-text, .icon {
+    .menu-text,
+    .icon {
       display: none;
     }
   }

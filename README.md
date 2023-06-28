@@ -20,7 +20,8 @@ O = Optional
             3. Checking Doctors Authenticity (***)
             
 #### Appointments ->
-            1. Check the availability feature (***)
+            1. Check the availability feature (D)
+            2. Separate the appointments for doctor and user
             2. Cancelling on both End
 
 #### Profile ->

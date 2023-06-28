@@ -1,10 +1,11 @@
+
 import mongoose, { Schema } from 'mongoose';
 
 const appointmentSchema = mongoose.Schema({
 
     user: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'UserDetails',
     },
     doctor: {
         type: Schema.Types.ObjectId,
@@ -15,7 +16,7 @@ const appointmentSchema = mongoose.Schema({
         required: true,
     },
     time: {
-        type: String,
+        type: Date,
         required: true,
     },
     status: {
