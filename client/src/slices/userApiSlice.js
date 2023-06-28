@@ -48,6 +48,14 @@ export const userApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ['User']
         }),
 
+        deleteAppointment: builder.mutation({
+            query: (id) => ({
+                url: `${URL}/appointments/${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['User']
+        }),
+
         markAllAsRead: builder.mutation({
             query: () => ({
                 url: `${URL}/mark-all-as-read`,
@@ -98,5 +106,6 @@ export const {
     useGetAllApprovedDoctorsQuery,
     useGetAllAppointmentsQuery,
     useNewAppointmentMutation,
-    useLogoutMutation
+    useLogoutMutation,
+    useDeleteAppointmentMutation,
 } = userApiSlice;

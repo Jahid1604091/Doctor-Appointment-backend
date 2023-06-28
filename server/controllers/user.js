@@ -292,5 +292,30 @@ export const booked_appointments = asyncHandler(async (req, res) => {
     }
 });
 
+//private -> api/users/appointments/:id
+//method DELETE
+export const delete_appointment = asyncHandler(async (req, res) => {
+
+    const appointments = await Appointment.findById(req.params.id);
+
+    if (!appointments) {
+        throw new Error('Appointment not found', 404);
+    }
+    else {
+
+        const deletedAppointment = await Appointment.findByIdAndRemove(req.params.id);
+        return res.status(200).json({
+            success: true,
+            data: 'Appointment is removed!'
+        });
+    }
+
+
+
+
+});
+
+
+
 
 

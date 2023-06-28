@@ -20,7 +20,7 @@ export const checkAvailability = asyncHandler(async (req, res) => {
 
     const from_time = moment(time).subtract(10, 'minutes').toISOString();
     const to_time = moment(time).add(10, 'minutes').toISOString();
-    console.log(from_time)
+
 
     const appointments = await Appointment.find({
         //doctor and user id
@@ -31,7 +31,7 @@ export const checkAvailability = asyncHandler(async (req, res) => {
         
 
     });
-    console.log(appointments)
+    
     //saved in DB as 6 hrs ahead than us
     if (appointments.length === 0) {
         res.status(200).json({

@@ -3,13 +3,14 @@ import React, { useState } from "react";
 import { Button, Card, Col, Tab, Tabs } from "react-bootstrap";
 import { BiTimeFive } from "react-icons/bi";
 import { useSelector } from "react-redux";
+import { useDeleteAppointmentMutation } from "../slices/userApiSlice";
 
 
 
 export default function AppointmentsAsDoctor({ data, associate_doctor }) {
 
   const [activeTab, seActiveTab] = useState("As Doctor");
-
+  const [deleteAppointment,{data:deletedAppointment}] = useDeleteAppointmentMutation();
   return (
     <div>
       <Tabs
@@ -45,13 +46,12 @@ export default function AppointmentsAsDoctor({ data, associate_doctor }) {
                       </p>{" "}
                     </div>
                     <div className="text-center">
-                      <Button
-                        disabled
-                        to={`doctors/${appointment._id}`}
-                        className="btn-danger"
-                      >
-                        Cancel
-                      </Button>
+                    <Button
+                  onClick={()=>deleteAppointment(appointment._id)}
+                    className="btn-danger"
+                  >
+                    Cancel
+                  </Button>
                     </div>
                   </Card.Body>
                 </Card>
@@ -87,13 +87,12 @@ export default function AppointmentsAsDoctor({ data, associate_doctor }) {
                       </p>{" "}
                     </div>
                     <div className="text-center">
-                      <Button
-                        disabled
-                        to={`doctors/${appointment._id}`}
-                        className="btn-danger"
-                      >
-                        Cancel
-                      </Button>
+                    <Button
+                  onClick={()=>deleteAppointment(appointment._id)}
+                    className="btn-danger"
+                  >
+                    Cancel
+                  </Button>
                     </div>
                   </Card.Body>
                 </Card>

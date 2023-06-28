@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  useDeleteAppointmentMutation,
   useGetAllAppointmentsQuery,
   useGetAllApprovedDoctorsQuery,
 } from "../slices/userApiSlice";
@@ -14,17 +15,20 @@ import AppointmentsAsDoctor from "../components/AppointmentsAsDoctor";
 
 export default function Appointments() {
   const { data } = useGetAllAppointmentsQuery();
-  // console.log(data)
+  const [deleteAppointment,{data:deletedAppointment}] = useDeleteAppointmentMutation();
+  const { data: doctors } = useGetAllApprovedDoctorsQuery();
   const {userInfo} = useSelector(state=>state.auth);
  
-  const { data: doctors } = useGetAllApprovedDoctorsQuery();
 
   if (data?.length === 0) return <NotFound>No Appointment Found!</NotFound>;
+
 
   const associate_doctor = (doctorId) => {
     const user = doctors?.find((doc) => doc._id == doctorId);
     return user?.user.name;
   };
+
+  console.log(deleteAppointment)
 
   return (
     <Layout>
@@ -56,8 +60,7 @@ export default function Appointments() {
                 </div>
                 <div className="text-center">
                   <Button
-                    disabled
-                    to={`doctors/${appointment?._id}`}
+                  onClick={()=>deleteAppointment(appointment._id)}
                     className="btn-danger"
                   >
                     Cancel
