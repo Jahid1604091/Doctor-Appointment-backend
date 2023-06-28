@@ -244,45 +244,52 @@ export const new_appointment = asyncHandler(async (req, res) => {
 export const booked_appointments = asyncHandler(async (req, res) => {
     //get appointments list as user
     const appointments = await Appointment.find({ user: req.user._id }).populate('doctor');
-
+    const user = await UserDetails.findById(req.user._id)
     //as doctor
     //get userId from logInfo -> compare it with doctor table -> from doctor Id compare with appointment table 
     //-> finally get appointments
-    const doctor_id = await Doctor.findOne({ user: req.user._id });
-
-    const appointments_as_doctor = await Appointment.aggregate([
-        {
-            $lookup: {
-
-                from: 'userdetails',
-                localField: 'user',
-                foreignField: '_id',
-                as: 'userInfo'
+    if(user?.isDoctor){
+        const doctor_id = await Doctor.findOne({ user: req.user._id });
+    
+        const appointments_as_doctor = await Appointment.aggregate([
+            {
+                $lookup: {
+    
+                    from: 'userdetails',
+                    localField: 'user',
+                    foreignField: '_id',
+                    as: 'userInfo'
+                }
+            },
+            { $unwind: "$userInfo" },
+            {
+                $match: {
+                    $and: [{ "doctor": doctor_id._id }]
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    date: 1,
+                    time: 1,
+                    status: 1,
+                    patientName: "$userInfo.name",
+    
+                }
             }
-        },
-        { $unwind: "$userInfo" },
-        {
-            $match: {
-                $and: [{ "doctor": doctor_id._id }]
-            }
-        },
-        {
-            $project: {
-                _id: 1,
-                date: 1,
-                time: 1,
-                status: 1,
-                patientName: "$userInfo.name",
+        ]);
+    
+        res.status(200).json({
+            doctor: appointments_as_doctor,
+            user: appointments,
+        })
 
-            }
-        }
-    ]);
-
-
-    res.status(200).json({
-        doctor: appointments_as_doctor,
-        user: appointments,
-    })
+    }
+    else{
+        res.status(200).json(
+            appointments,
+        )
+    }
 });
 
 

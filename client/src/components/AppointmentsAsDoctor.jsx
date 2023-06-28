@@ -3,14 +3,13 @@ import React, { useState } from "react";
 import { Button, Card, Col, Tab, Tabs } from "react-bootstrap";
 import { BiTimeFive } from "react-icons/bi";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { useGetAppointmentsAsDoctorQuery } from "../slices/doctorApiSlice";
+
+
 
 export default function AppointmentsAsDoctor({ data, associate_doctor }) {
-  // console.log(data?.user)
+
   const [activeTab, seActiveTab] = useState("As Doctor");
-  const { userInfo } = useSelector((state) => state.auth);
-  // const [] = useGetAppointmentsAsDoctorQuery()
+
   return (
     <div>
       <Tabs

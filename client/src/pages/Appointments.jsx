@@ -3,13 +3,13 @@ import {
   useGetAllAppointmentsQuery,
   useGetAllApprovedDoctorsQuery,
 } from "../slices/userApiSlice";
-import { Button, Card, Col, Container, Row, Tab, Tabs } from "react-bootstrap";
+import { Button, Card, Col, Row} from "react-bootstrap";
 import moment from "moment";
 import { BiTimeFive } from "react-icons/bi";
 import Layout from "../components/Layout";
 import NotFound from "../components/NotFound";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+
 import AppointmentsAsDoctor from "../components/AppointmentsAsDoctor";
 
 export default function Appointments() {
@@ -31,10 +31,9 @@ export default function Appointments() {
       <h3>Appointments</h3> <hr />
       <Row>
 
-
       {userInfo?.isDoctor ?  <AppointmentsAsDoctor data={data} associate_doctor={associate_doctor}/> :
 
-      data?.user?.map((appointment) => {
+      data?.map((appointment) => {
         return (
           <Col key={appointment?._id} md={4}>
             <Card className="card my-4">

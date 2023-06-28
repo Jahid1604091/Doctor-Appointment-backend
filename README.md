@@ -15,13 +15,13 @@ O = Optional
             2.
 
 #### Apply as doctor ->
-            1. Send Instant Notification to Admin / Send Email (O)
+            1. Send Instant Notification to Admin (Socket IO) / Send Email (O)
             2. Checking Time Range / Edit
             3. Checking Doctors Authenticity (***)
             
 #### Appointments ->
             1. Check the availability feature (D)
-            2. Separate the appointments for doctor and user
+            2. Separate the appointments for doctor and user (D)
             2. Cancelling on both End
 
 #### Profile ->

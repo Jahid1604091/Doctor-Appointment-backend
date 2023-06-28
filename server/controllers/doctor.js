@@ -10,13 +10,6 @@ export const get_doctor_by_id = asyncHandler(async (req, res) => {
     res.status(200).json(doctor);
 });
 
-//private -> api/appointments/doctor/:id
-export const get_appointments_as_doctor = asyncHandler(async (req, res) => {
-    console.log(req.params)
-    const appointments = await Appointment.find({doctor:req.params.id}).populate('user','name email');
-    res.status(200).json(appointments);
-});
-
 //private -> api/doctors/check-availability
 export const checkAvailability = asyncHandler(async (req, res) => {
 
