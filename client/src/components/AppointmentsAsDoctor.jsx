@@ -4,11 +4,13 @@ import { Button, Card, Col, Tab, Tabs } from "react-bootstrap";
 import { BiTimeFive } from "react-icons/bi";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { useGetAppointmentsAsDoctorQuery } from "../slices/doctorApiSlice";
 
 export default function AppointmentsAsDoctor({ data, associate_doctor }) {
-  console.log(data)
+  // console.log(data?.user)
   const [activeTab, seActiveTab] = useState("As Doctor");
   const { userInfo } = useSelector((state) => state.auth);
+  // const [] = useGetAppointmentsAsDoctorQuery()
   return (
     <div>
       <Tabs
@@ -18,24 +20,24 @@ export default function AppointmentsAsDoctor({ data, associate_doctor }) {
         fill
       >
         <Tab eventKey="As Doctor" title="As Doctor">
-        {data?.map((appointment) => {
+        {data?.doctor.map((appointment) => {
             return (
               <Col key={appointment._id} md={4}>
                 <Card className="card my-4">
                   <Card.Body>
                     <Card.Title>
-                      {associate_doctor(appointment.doctor._id)}{" "}
+                      {appointment.patientName}{" "}
                     </Card.Title>
                     <Card.Subtitle className="mb-2 text-muted text-uppercase">
-                      {appointment.doctor.expertise_in}
+                      {/* {appointment.doctor.expertise_in} */}
                     </Card.Subtitle>
                     <div>
                       <p>
-                        Fee :{" "}
-                        <span className="fw-bold">
-                          {appointment.doctor.fee}
-                        </span>{" "}
-                        TK
+                     
+                       
+                          {appointment.status === 'pending' && appointment.status}
+                     
+                        
                       </p>{" "}
                       <p className="fw-light">
                         <BiTimeFive size={18} />{" "}
@@ -60,7 +62,7 @@ export default function AppointmentsAsDoctor({ data, associate_doctor }) {
         </Tab>
 
         <Tab eventKey="As Patient" title="As Patient">
-          {data?.map((appointment) => {
+          {data?.user.map((appointment) => {
             return (
               <Col key={appointment._id} md={4}>
                 <Card className="card my-4">

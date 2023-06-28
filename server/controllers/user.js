@@ -5,8 +5,6 @@ import { Appointment } from "../models/Appointment.js";
 import { UserDetails } from "../models/UserDetails.js";
 import moment from "moment";
 
-
-
 //public -> api/users/auth
 export const auth_user = asyncHandler(async (req, res) => {
 
@@ -75,7 +73,7 @@ export const register = asyncHandler(async (req, res) => {
         }
     } catch (error) {
         const errors = Object.values(error.errors)
-        res.status(400).json({msg:errors[0].message})
+        res.status(400).json({ msg: errors[0].message })
     }
 
 });
@@ -207,7 +205,7 @@ export const new_appointment = asyncHandler(async (req, res) => {
     const newAppointment = new Appointment({
         ...req.body,
         date: moment(date).format('DD-MM-YYYY'),
-        time:moment(time).toISOString(),
+        time: moment(time).toISOString(),
         status: "pending"
     });
 
@@ -242,11 +240,49 @@ export const new_appointment = asyncHandler(async (req, res) => {
     }
 });
 
-//private -> api/users/booked-appointments?
+//private -> api/users/booked-appointments
 export const booked_appointments = asyncHandler(async (req, res) => {
-     //get appointments list as user
+    //get appointments list as user
     const appointments = await Appointment.find({ user: req.user._id }).populate('doctor');
-    res.status(200).json(appointments)
+
+    //as doctor
+    //get userId from logInfo -> compare it with doctor table -> from doctor Id compare with appointment table 
+    //-> finally get appointments
+    const doctor_id = await Doctor.findOne({ user: req.user._id });
+
+    const appointments_as_doctor = await Appointment.aggregate([
+        {
+            $lookup: {
+
+                from: 'userdetails',
+                localField: 'user',
+                foreignField: '_id',
+                as: 'userInfo'
+            }
+        },
+        { $unwind: "$userInfo" },
+        {
+            $match: {
+                $and: [{ "doctor": doctor_id._id }]
+            }
+        },
+        {
+            $project: {
+                _id: 1,
+                date: 1,
+                time: 1,
+                status: 1,
+                patientName: "$userInfo.name",
+
+            }
+        }
+    ]);
+
+
+    res.status(200).json({
+        doctor: appointments_as_doctor,
+        user: appointments,
+    })
 });
 
 

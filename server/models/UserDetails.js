@@ -1,8 +1,10 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { Schema } from 'mongoose';
 
 const userSchema = mongoose.Schema({
+    app_id: {type:Schema.Types.ObjectId,ref:'Appointment' },
     name: {
         type: String,
         minlength: [5, 'Name cant be less than 5 char']

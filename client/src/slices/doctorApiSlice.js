@@ -7,6 +7,11 @@ export const doctorApiSlice = apiSlice.injectEndpoints({
             query: (id) => `${URL}/${id}`
 
         }),
+        
+        getAppointmentsAsDoctor: builder.query({
+            query: (id) => `${URL}/appointments/doctor/${id}`
+
+        }),
 
         checkAvailability: builder.mutation({
             query: (data) => ({
@@ -21,5 +26,6 @@ export const doctorApiSlice = apiSlice.injectEndpoints({
 
 export const {
     useGetDoctorByIdQuery,
+    useGetAppointmentsAsDoctorQuery,
     useCheckAvailabilityMutation,
 } = doctorApiSlice;

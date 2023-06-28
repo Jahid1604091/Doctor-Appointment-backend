@@ -14,6 +14,7 @@ import AppointmentsAsDoctor from "../components/AppointmentsAsDoctor";
 
 export default function Appointments() {
   const { data } = useGetAllAppointmentsQuery();
+  // console.log(data)
   const {userInfo} = useSelector(state=>state.auth);
  
   const { data: doctors } = useGetAllApprovedDoctorsQuery();
@@ -30,33 +31,34 @@ export default function Appointments() {
       <h3>Appointments</h3> <hr />
       <Row>
 
+
       {userInfo?.isDoctor ?  <AppointmentsAsDoctor data={data} associate_doctor={associate_doctor}/> :
 
-      data?.map((appointment) => {
+      data?.user?.map((appointment) => {
         return (
-          <Col key={appointment._id} md={4}>
+          <Col key={appointment?._id} md={4}>
             <Card className="card my-4">
               <Card.Body>
                 <Card.Title>
-                  {associate_doctor(appointment.doctor._id)}{" "}
+                  {associate_doctor(appointment?.doctor._id)}{" "}
                 </Card.Title>
                 <Card.Subtitle className="mb-2 text-muted text-uppercase">
-                  {appointment.doctor.expertise_in}
+                  {appointment?.doctor.expertise_in}
                 </Card.Subtitle>
                 <div>
                   <p>
                     Fee :{" "}
-                    <span className="fw-bold">{appointment.doctor.fee}</span> TK
+                    <span className="fw-bold">{appointment?.doctor.fee}</span> TK
                   </p>{" "}
                   <p className="fw-light">
                     <BiTimeFive size={18} />{" "}
-                    {moment(appointment.time).format("hh:mm a")}, {appointment.date}
+                    {moment(appointment?.time).format("hh:mm a")}, {appointment?.date}
                   </p>{" "}
                 </div>
                 <div className="text-center">
                   <Button
                     disabled
-                    to={`doctors/${appointment._id}`}
+                    to={`doctors/${appointment?._id}`}
                     className="btn-danger"
                   >
                     Cancel
