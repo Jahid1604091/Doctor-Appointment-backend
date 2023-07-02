@@ -1,12 +1,30 @@
 import asyncHandler from "express-async-handler";
 import { Doctor } from "../../models/doctor.js";
 import { UserDetails } from "../../models/UserDetails.js";
+import { Appointment } from "../../models/Appointment.js";
 
 
 //private by admin -> api/admin/users
 export const get_all_users = asyncHandler(async (req, res) => {
-    const users = await UserDetails.find({ role: 'user', isDoctor: false });
+    const users = await UserDetails.find({ role: 'user' });
     res.status(200).json(users);
+});
+
+
+//private by admin -> api/admin/users/:id
+export const deleteUser = asyncHandler(async (req, res) => {
+    const user = await UserDetails.findById(req.params.id);
+    const doctor = await Doctor.findOne({ user: req.params.id });
+    await Appointment.deleteMany({
+        $or: [
+            { user: req.params.id }, { doctor: doctor._id }
+        ]
+    }
+    );
+    await doctor.deleteOne();
+    await user.deleteOne();
+
+    res.status(200).json({ success: true });
 });
 
 //private by admin -> api/admin/doctors
@@ -22,7 +40,7 @@ export const get_all_doctors = asyncHandler(async (req, res) => {
 export const get_all_approved_doctors = asyncHandler(async (req, res) => {
     try {
         const doctors = await Doctor.find(
-          
+
             { status: 'approved', user: { $ne: req.user._id } })
             .populate('user');
         res.status(200).json(doctors);

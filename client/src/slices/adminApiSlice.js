@@ -7,6 +7,13 @@ export const adminApiSlice = apiSlice.injectEndpoints({
             query:()=> `${URL}/users`,
             providesTags:['Users']
         }),
+        deleteUser:builder.mutation({
+            query:(id)=>({
+                url:`${URL}/users/${id}`,
+                method:'DELETE',
+            }),
+            invalidatesTags:['Users']
+        }),
         getAllDoctors: builder.query({
             query:()=> `${URL}/doctors`,
             providesTags:['Doctors']
@@ -31,6 +38,7 @@ export const adminApiSlice = apiSlice.injectEndpoints({
 
 export const {
     useGetAllUsersQuery,
+    useDeleteUserMutation,
     useGetAllDoctorsQuery,
     useApproveAsDoctorMutation,
     useRemoveAsDoctorMutation,

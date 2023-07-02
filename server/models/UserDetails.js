@@ -2,9 +2,11 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Schema } from 'mongoose';
+import { Doctor } from './doctor.js';
+import { Appointment } from './Appointment.js';
 
 const userSchema = mongoose.Schema({
-    app_id: {type:Schema.Types.ObjectId,ref:'Appointment' },
+    app_id: { type: Schema.Types.ObjectId, ref: 'Appointment' },
     name: {
         type: String,
         minlength: [5, 'Name cant be less than 5 char']
@@ -24,22 +26,22 @@ const userSchema = mongoose.Schema({
         enum: ['user', 'admin'],
         default: 'user'
     },
-    isDoctor:{
-        type:Boolean,
-        default:false
+    isDoctor: {
+        type: Boolean,
+        default: false
     },
     password: {
         type: String,
         required: [true, 'Please add a password'],
         minlength: 6,
     },
-    seenNotifications:{
-        type:Array,
-        default:[]
+    seenNotifications: {
+        type: Array,
+        default: []
     },
-    unseenNotifications:{
-        type:Array,
-        default:[]
+    unseenNotifications: {
+        type: Array,
+        default: []
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
@@ -48,6 +50,16 @@ const userSchema = mongoose.Schema({
     verified: Boolean,
 
 }, { timestamps: true })
+
+
+//remove data(doctor collection) that referencing UserDetails
+// userSchema.pre('deleteOne', { document: true }, async function (next) {
+
+//     const doctor =  await Doctor.deleteOne({ user: this._id });
+//     await Appointment.deleteMany({ doctor: doctor._id });
+//     next();
+
+// })
 
 //encrypt pass
 userSchema.pre('save', async function (next) {
