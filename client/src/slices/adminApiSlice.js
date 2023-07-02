@@ -18,6 +18,13 @@ export const adminApiSlice = apiSlice.injectEndpoints({
             }),
             invalidatesTags:['Doctors']
         }),
+        removeAsDoctor:builder.mutation({
+            query:(id)=>({
+                url:`${URL}/remove-as-doctor/${id}`,
+                method:'PUT',
+            }),
+            invalidatesTags:['Doctors']
+        }),
 
     })
 });
@@ -26,4 +33,5 @@ export const {
     useGetAllUsersQuery,
     useGetAllDoctorsQuery,
     useApproveAsDoctorMutation,
+    useRemoveAsDoctorMutation,
 } = adminApiSlice;

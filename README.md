@@ -22,7 +22,7 @@ O = Optional
 #### Appointments ->
             1. Check the availability feature (D)
             2. Separate the appointments for doctor and user (D)
-            2. Cancelling on both End
+            2. Cancelling on both End (D)
 
 #### Profile ->
             1. User/ Doctor / admin -- 3 different profile

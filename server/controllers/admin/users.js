@@ -53,3 +53,23 @@ export const approveAsDoctor = asyncHandler(async (req, res) => {
     await user.save();
     res.status(200).json({ success: true });
 });
+
+//private by admin -> api/admin/remove-as-doctor/:id
+export const removeAsDoctor = asyncHandler(async (req, res) => {
+    const doctor = await Doctor.findByIdAndRemove(req.params.id);
+
+    //@todo send approval notification to the user
+
+    const user = await UserDetails.findById(doctor.user);
+    user.isDoctor = false;
+    // const unseenNotifications = user.unseenNotifications;
+
+    // unseenNotifications.push({
+    //     type: 'doctor-approval',
+    //     message: `Your application for doctor is approved!`,
+    // });
+    // user.isDoctor = true;
+
+    await user.save();
+    res.status(200).json({ success: true });
+});
