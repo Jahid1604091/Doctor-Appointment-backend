@@ -1,14 +1,23 @@
 import asyncHandler from "express-async-handler";
-import { Doctor } from "../models/doctor.js";
+import { Doctor } from "../models/Doctor.js";
 import { Appointment } from "../models/Appointment.js";
 import moment from "moment";
-
+import mongoose from 'mongoose';
 
 //private -> api/doctors/:id/
 export const get_doctor_by_id = asyncHandler(async (req, res) => {
     const doctor = await Doctor.findById(req.params.id).populate('user');
     res.status(200).json(doctor);
 });
+
+//In profile you can get the doctors details by userId
+export const get_doctor_by_userId = asyncHandler(async (req, res) => {
+    const userId = req.params.userId;
+    
+    const doctor = await Doctor.find({ user: userId });
+    console.log( doctor)
+    res.status(200).json(doctor);
+}); 
 
 //private -> api/doctors/check-availability
 export const checkAvailability = asyncHandler(async (req, res) => {

@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 export default function Loader() {
   return (
-    <Layout>
+    <>
       <Wrapper>
         <Container>
           <Row>
@@ -19,7 +19,7 @@ export default function Loader() {
           </Row>
         </Container>
       </Wrapper>
-    </Layout>
+    </>
   );
 }
 

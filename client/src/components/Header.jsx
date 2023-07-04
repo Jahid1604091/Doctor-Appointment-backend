@@ -25,7 +25,6 @@ function Header() {
     } else {
       linksContainerRef.current.style.height = "0px";
     }
-    
   }, [showLinks]);
 
   const { userInfo } = useSelector((state) => state.auth);
@@ -39,7 +38,7 @@ function Header() {
       await logoutApi().unwrap();
       dispatch(logout());
       navigate("/login");
-      toast('Logged Out !')
+      toast("Logged Out !");
     } catch (error) {
       console.log(error.message);
     }
@@ -49,22 +48,28 @@ function Header() {
       <nav>
         <div className="nav-center">
           <div className="nav-header d-flex justify-content-between">
-            <img src={logo} alt="" className="logo" />
-            <h3>Doctor Portal</h3>
-            {userInfo && <button
-              className="nav-toggle"
-              onClick={() => setShowLinks(!showLinks)}
-            >
-              <FaBars />
-            </button>}
-              
+            <Link to="/">
+              {" "}
+              <img src={logo} alt="" className="logo" />
+            </Link>
+            <Link to="/">
+              {" "}
+              <h3>Doctor Portal</h3>
+            </Link>
+            {userInfo && (
+              <button
+                className="nav-toggle"
+                onClick={() => setShowLinks(!showLinks)}
+              >
+                <FaBars />
+              </button>
+            )}
           </div>
           <div className="links-container" ref={linksContainerRef}>
             <ul className="links" ref={linksRef}>
-            
               {userInfo && (
                 <>
-                <li> {userInfo?.name}</li>
+                  <li> {userInfo?.name}</li>
                   <li className="notification-icon">
                     <Link to="/notifications">
                       <GrNotification />{" "}
@@ -98,7 +103,6 @@ const Wrapper = styled.section`
     position: fixed;
     width: 100vw;
     z-index: 999;
-    
   }
   .nav-header {
     display: flex;
@@ -121,7 +125,7 @@ const Wrapper = styled.section`
   .logo {
     height: 40px;
   }
-  .links{
+  .links {
     text-align: center !important;
   }
   .links a {
@@ -132,7 +136,6 @@ const Wrapper = styled.section`
     display: block;
     padding: 0.5rem 1rem;
     transition: var(--transition);
-    
   }
   .links a:hover {
     background: var(--clr-primary-8);
@@ -144,18 +147,15 @@ const Wrapper = styled.section`
     height: 0;
     overflow: hidden;
     transition: var(--transition);
-    
-    .notification-icon{
+
+    .notification-icon {
       position: relative;
-      .notification-number{
+      .notification-number {
         color: var(--clr-primary-2);
         position: absolute;
         top: -3px;
-      
       }
-
     }
-
   }
   .show-container {
     height: 10rem;
@@ -180,7 +180,6 @@ const Wrapper = styled.section`
     }
     .links {
       display: flex;
-     
     }
     .links a {
       padding: 0;

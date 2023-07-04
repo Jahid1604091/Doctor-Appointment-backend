@@ -2,6 +2,7 @@ import express from 'express';
 import {
     auth_user,
     booked_appointments,
+    complete_profile,
     delete_appointment,
     delete_profile,
     get_profile,
@@ -32,5 +33,6 @@ router.get('/doctors/:id', protect, get_all_approved_doctors);
 router.post('/appointment', protect, new_appointment);
 router.get('/booked-appointments', protect, booked_appointments);
 router.delete('/appointments/:id', protect, delete_appointment);
+router.post('/complete-profile', protect, complete_profile);
 
 export default router;

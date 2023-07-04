@@ -1,7 +1,7 @@
 D = Done
 O = Optional
 
-### features ###
+### ::Features:: ###
 -----------------------------------------
 #### Auth -> 
             1. Normal Registration (D)
@@ -12,7 +12,7 @@ O = Optional
 
 #### Home ->
             1. Add Doctor No, Location, Chamber, Others
-            2.
+            2. Pagination
 
 #### Apply as doctor ->
             1. Send Instant Notification to Admin (Socket IO) / Send Email (O)
@@ -25,14 +25,14 @@ O = Optional
             2. Cancelling on both End (D)
 
 #### Profile ->
-            1. User/ Doctor / admin -- 3 different profile
+            1. User/ Doctor / admin -- 3 different profile (D)
             2. Upload Photo to cloud/ cloudinary
-            3. Update / Delete Profile by user/admin
+            3. Update / Delete Profile by user/ADMIN (D)
             4. Add Doctors details including medical, passing year etc
             5. Can upload his medical certificate as pdf
 
 #### Admin -> 
-            1. Check doctors details and approve or block
+            1. Check doctors details and approve or delete (D)
             2. check certificate via online
             
 

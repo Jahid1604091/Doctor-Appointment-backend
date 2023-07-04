@@ -28,7 +28,6 @@ export default function Appointments() {
     return user?.user.name;
   };
 
-  console.log(deleteAppointment)
 
   return (
     <Layout>

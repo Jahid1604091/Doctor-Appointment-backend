@@ -1,4 +1,4 @@
-import { apiSlice } from "./apiSlice";
+import { apiSlice, countryApiSlice } from "./apiSlice";
 const URL = '/api/users';
 
 export const userApiSlice = apiSlice.injectEndpoints({
@@ -68,7 +68,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
             query: () => `${URL}/approved-doctors`,
             // transformResponse: (response, meta, arg) => response.data,
             // transformErrorResponse: (response, meta, arg) => response.status,
-            providesTags:['User'],
+            providesTags: ['User'],
         }),
 
         getAllAppointments: builder.query({
@@ -93,6 +93,28 @@ export const userApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ['User']
         }),
 
+        uploadAvatar: builder.mutation({
+            query: (data) => ({
+                url: `api/upload/avatar`,
+                method: 'POST',
+                body: data,
+                formData: true
+            }),
+            invalidatesTags: ['User']
+        }),
+
+        uploadFile: builder.mutation({
+            query: (data) => ({
+                url: `api/upload/file`,
+                method: 'POST',
+                body: data,
+                formData: true
+            }),
+            invalidatesTags: ['User']
+        }),
+
+
+
     })
 });
 
@@ -108,4 +130,7 @@ export const {
     useNewAppointmentMutation,
     useLogoutMutation,
     useDeleteAppointmentMutation,
+    useUploadFileMutation,
+    useUploadAvatarMutation,
+
 } = userApiSlice;

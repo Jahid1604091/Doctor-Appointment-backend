@@ -33,32 +33,32 @@ export default function Doctors() {
 
   const tbody_data = data?.map((doctor) => {
     return (
-      <tr key={doctor._id}>
+      <tr key={doctor?._id}>
         <td className="text-capitalize">
           <span
             className={`text-light rounded p-1 bg-${
-              doctor.status === "pending" ? "warning" : "primary"
+              doctor?.status === "pending" ? "warning" : "primary"
             }`}
           >
-            {doctor.status}
+            {doctor?.status}
           </span>
         </td>
-        <td>{doctor.user.name ? doctor.user.name : null}</td>
-        <td>{doctor.email}</td>
-        <td>{doctor.expertise_in}</td>
-        <td>{moment(doctor.createdAt).format("DD MMM YY, hh:mm a")}</td>
+        <td>{doctor?.user?.name ? doctor?.user?.name : null}</td>
+        <td>{doctor?.email}</td>
+        <td>{doctor?.expertise_in}</td>
+        <td>{moment(doctor?.createdAt).format("DD MMM YY, hh:mm a")}</td>
         <td>
-          {doctor.status === "pending" ? (
+          {doctor?.status === "pending" ? (
             <span
               className="approve-btn"
-              onClick={() => handleApprove(doctor._id)}
+              onClick={() => handleApprove(doctor?._id)}
             >
               Approve
             </span>
           ) : (
             <span
               className="approve-btn"
-              onClick={() => handleRemove(doctor._id)}
+              onClick={() => handleRemove(doctor?._id)}
             >
               Remove
             </span>

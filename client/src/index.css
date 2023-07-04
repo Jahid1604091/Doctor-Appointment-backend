@@ -89,12 +89,12 @@ h4 {
   font-size: 0.875rem;
 }
 p {
-  margin-bottom: 1.25rem;
+  /* margin-bottom: 1.25rem; */
   color: var(--clr-grey-5);
 }
 .btn {
   border-radius: 0;
-  background-color: var(--clr-primary-2);
+  /* background-color: var(--clr-primary-2); */
   color: var(--clr-primary-10);
 }
 

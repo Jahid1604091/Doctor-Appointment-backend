@@ -1,6 +1,5 @@
 import React from "react";
 import Layout from "../components/Layout";
-
 import { Card, Col, Container, Row } from "react-bootstrap";
 import styled from "styled-components";
 import { useGetAllApprovedDoctorsQuery } from "../slices/userApiSlice";
@@ -12,7 +11,7 @@ import NotFound from "../components/NotFound";
 
 export default function Home() {
   const {
-    data = [],
+    data=[],
     isLoading,
     isFetching,
     isError,
@@ -23,6 +22,7 @@ export default function Home() {
   if (data.length === 0) return <NotFound>No Approved Doctor Found!</NotFound>;
   if (isLoading) return <Loader />;
   if (isFetching) return <Fetching />;
+
 
   return (
     <Layout>
@@ -40,15 +40,15 @@ export default function Home() {
                         className="avatar"
                       />
                       <Card.Body>
-                        <Card.Title>{doctor.user.name}</Card.Title>
+                        <Card.Title>{doctor?.user?.name}</Card.Title>
                         <Card.Subtitle className="mb-2 text-muted text-uppercase">
-                          {doctor.expertise_in}
+                          {doctor?.expertise_in}
                         </Card.Subtitle>
                         <Card.Text>
-                          <span>Fee Per Visit (BDT) : {doctor.fee}</span>
+                          <span>Fee Per Visit (BDT) : {doctor?.fee}</span>
                         </Card.Text>
                         <div className="text-center">
-                          <Link to={`doctors/${doctor._id}`} className="btn btn-outline-primary">
+                          <Link to={`doctors/${doctor?._id}`} className="btn btn-primary">
                             Appoint Now
                           </Link>
                         </div>

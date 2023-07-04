@@ -1,9 +1,9 @@
 import asyncHandler from "express-async-handler";
-import { Doctor } from "../models/doctor.js";
+import { Doctor } from "../models/Doctor.js";
 import { Appointment } from "../models/Appointment.js";
-
 import { UserDetails } from "../models/UserDetails.js";
 import moment from "moment";
+
 
 //public -> api/users/auth
 export const auth_user = asyncHandler(async (req, res) => {
@@ -85,21 +85,32 @@ export const get_profile = asyncHandler(async (req, res) => {
 
 //private -> api/users/profile/
 export const update_profile = asyncHandler(async (req, res) => {
+    const { city, state, zip, url } = req.body;
+    const address = `${city}, ${state}, ${zip}`;
+
     const user = await UserDetails.findById(req.user);
     if (!user) {
         throw new Error('User not found', 404);
     }
-    if (!req.body.password) {
-        throw new Error('Please provide your password ', 404);
-    }
+
     user.name = req.body.name || user.name
     user.email = req.body.email || user.email
-    user.password = req.body.password
+
+
+    user.avatar_url = url || user.avatar_url
+    user.address = address || user.address
+
+    if(user.address && user.avatar_url){
+        user.isComplete = true
+    }
+
     const updatedUser = await user.save();
+
     return res.status(200).json({
         success: true,
         data: updatedUser
     });
+
 });
 
 //private -> api/users/profile/
@@ -248,13 +259,13 @@ export const booked_appointments = asyncHandler(async (req, res) => {
     //as doctor
     //get userId from logInfo -> compare it with doctor table -> from doctor Id compare with appointment table 
     //-> finally get appointments
-    if(user?.isDoctor){
+    if (user?.isDoctor) {
         const doctor_id = await Doctor.findOne({ user: req.user._id });
-    
+
         const appointments_as_doctor = await Appointment.aggregate([
             {
                 $lookup: {
-    
+
                     from: 'userdetails',
                     localField: 'user',
                     foreignField: '_id',
@@ -274,18 +285,18 @@ export const booked_appointments = asyncHandler(async (req, res) => {
                     time: 1,
                     status: 1,
                     patientName: "$userInfo.name",
-    
+
                 }
             }
         ]);
-    
+
         res.status(200).json({
             doctor: appointments_as_doctor,
             user: appointments,
         })
 
     }
-    else{
+    else {
         res.status(200).json(
             appointments,
         )
@@ -312,6 +323,23 @@ export const delete_appointment = asyncHandler(async (req, res) => {
 
 
 
+
+});
+
+
+export const complete_profile = asyncHandler(async (req, res) => {
+
+    const { avatar_url, address, certificate_url } = req.body;
+
+    // if(certificate_url){
+    //     //upload certificate in Doctor part
+    // }
+
+    // upload.single("picture"), async (req, res) => {
+    //     return res.json({ picture: req.file.path });
+    //   }
+    // console.log(req.files)
+    res.json('dd')
 
 });
 

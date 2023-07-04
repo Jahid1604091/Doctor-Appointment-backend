@@ -1,10 +1,7 @@
 import mongoose from 'mongoose';
 
 const doctorSchema = mongoose.Schema({
-    // userId:{
-    //     type:String,
-    //     required:true
-    // },
+
     user:{
         type:mongoose.Types.ObjectId,
         ref:'UserDetails'
@@ -38,6 +35,9 @@ const doctorSchema = mongoose.Schema({
     timings:{
         type:Array,
         required:true
+    },
+    certificate_url:{
+        type:String
     }
 }, { timestamps: true });
 
