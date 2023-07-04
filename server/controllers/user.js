@@ -96,11 +96,12 @@ export const update_profile = asyncHandler(async (req, res) => {
     user.name = req.body.name || user.name
     user.email = req.body.email || user.email
 
-
     user.avatar_url = url || user.avatar_url
-    user.address = address || user.address
+    user.address.city = city || user.address.city
+    user.address.state = state || user.address.state
+    user.address.zip = zip || user.address.zip
 
-    if(user.address && user.avatar_url){
+    if (user.address && user.avatar_url) {
         user.isComplete = true
     }
 
@@ -326,22 +327,6 @@ export const delete_appointment = asyncHandler(async (req, res) => {
 
 });
 
-
-export const complete_profile = asyncHandler(async (req, res) => {
-
-    const { avatar_url, address, certificate_url } = req.body;
-
-    // if(certificate_url){
-    //     //upload certificate in Doctor part
-    // }
-
-    // upload.single("picture"), async (req, res) => {
-    //     return res.json({ picture: req.file.path });
-    //   }
-    // console.log(req.files)
-    res.json('dd')
-
-});
 
 
 

@@ -13,9 +13,7 @@ export const get_doctor_by_id = asyncHandler(async (req, res) => {
 //In profile you can get the doctors details by userId
 export const get_doctor_by_userId = asyncHandler(async (req, res) => {
     const userId = req.params.userId;
-    
     const doctor = await Doctor.find({ user: userId });
-    console.log( doctor)
     res.status(200).json(doctor);
 }); 
 

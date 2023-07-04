@@ -69,12 +69,12 @@ export default function Profile() {
                 </ListGroup.Item>
               </ListGroup>
               <Card.Body>
-                <Link
+               {isComplete && <Link
                   to="/profile/edit"
                   className="btn bg-secondary text-light p-1"
                 >
                   Edit Profile
-                </Link>
+                </Link>}
                 &nbsp;
                 <Link
                   to="/profile"

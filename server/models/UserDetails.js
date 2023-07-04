@@ -44,7 +44,9 @@ const userSchema = mongoose.Schema({
         type:String
     },
     address:{
-        type:String
+        city:String,
+        state:String,
+        zip:String,
     },
     isComplete:{
         type:Boolean,

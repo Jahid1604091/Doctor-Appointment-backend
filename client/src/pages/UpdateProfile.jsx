@@ -2,82 +2,123 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import FormContainer from "../components/FormContainer";
 import { useEffect, useState } from "react";
-import { Spinner } from "react-bootstrap";
-import { useUpdateProfileMutation } from "../slices/userApiSlice";
+import { Col, Row, Spinner } from "react-bootstrap";
+import {
+  useUpdateProfileMutation,
+  useUploadAvatarMutation,
+} from "../slices/userApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import MiniLoader from "../components/MiniLoader";
 
 function UpdateProfile() {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const dispatch = useDispatch();
-
   const { userInfo } = useSelector((state) => state.auth);
 
-  useEffect(() => {
-    setName(userInfo?.name);
-    setEmail(userInfo?.email);
-  }, [userInfo]);
+  const [url, setUrl] = useState(userInfo?.avatar_url);
+  const [name, setName] = useState(userInfo?.name);
+  const [city, setCity] = useState(userInfo?.address?.city);
+  const [state, setState] = useState(userInfo?.address?.state);
+  const [zip, setZip] = useState(userInfo?.address?.zip);
 
-  const [updateProfile, { isLoading }] = useUpdateProfileMutation();
+  const dispatch = useDispatch();
+
+  // useEffect(() => {
+  //   setName(userInfo?.name);
+  //   setCity(userInfo?.address?.city);
+  // }, [userInfo]);
+
+  const [updateProfile, { isLoading: isLoadingProfileUpdate }] = useUpdateProfileMutation();
+  const [uploadAvatar, { isLoading }] = useUploadAvatarMutation();
+
+  const uploadAvatarHandler = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+    //call uploading api
+    const {data:{url}} = await uploadAvatar(formData);
+
+    setUrl(url);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password !== confirmPassword) {
-      console.log(`Password doesn't match`);
-    } else {
       try {
-        const res = await updateProfile({
-          _id: userInfo?._id,
-          name,
-          email,
-          password,
-        }).unwrap();
+        const res = await updateProfile({name,url,city,state,zip}).unwrap();
         dispatch(setCredentials({ ...res.data }));
       } catch (error) {
         console.log(error?.data?.message || error.error);
       }
-    }
-    setPassword("");
-    setConfirmPassword("");
   };
   return (
     <FormContainer>
-      <h2>Update Profile</h2>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3">
-          <Form.Label>Name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </Form.Group>
-
-       
-        {isLoading ? (
-          <Button variant="primary" disabled>
-            <Spinner
-              as="span"
-              animation="grow"
-              size="sm"
-              role="status"
-              aria-hidden="true"
+      <h3 className="text-center">Update Profile</h3>
+      <Form className="mb-3" onSubmit={handleSubmit}>
+        <Row className="mb-1">
+          <Form.Group as={Col} controlId="formGridEmail">
+            <Form.Label>Name</Form.Label>
+            {isLoading && <MiniLoader />}
+            <Form.Control
+              type="text"
+              onChange={(e) => setName(e.target.value)}
+              name="name"
+              placeholder="Your Name"
+              value={name}
             />
-            Updating...
-          </Button>
-        ) : (
-          <>
-          <Button variant="primary" type="submit">
-            Update
-          </Button>
-          <Link to='/profile' className="btn btn-danger">Cancel</Link>{' '}
-          </>
-        )}
+          </Form.Group>
+        </Row>
+        <Row className="mb-1">
+          <Form.Group as={Col} controlId="formGridEmail">
+            <Form.Label>Avatar</Form.Label>
+            {isLoading && <MiniLoader />}
+            <Form.Control
+              type="file"
+              onChange={uploadAvatarHandler}
+              name="url"
+              placeholder="Upload Avatar"
+            />
+          </Form.Group>
+          <Form.Group as={Col} controlId="formGridEmail" className="text-end">
+            <img src={url} alt="" height={150} width={200} className="rounded" />
+          </Form.Group>
+        </Row>
+
+        <Row className="mb-1">
+          <Form.Group as={Col} controlId="formGridCity">
+            <Form.Label>City</Form.Label>
+            <Form.Control
+              type="text"
+              onChange={(e) => setCity(e.target.value)}
+              value={city}
+              name="city"
+            />
+          </Form.Group>
+
+          <Form.Group as={Col} controlId="formGridState">
+            <Form.Label>State</Form.Label>
+            <Form.Select
+              value={state}
+              onChange={(e) => setState(e.target.value)}
+            >
+              <option value="Muktagacha">Muktagacha</option>
+              <option value="Charpara">Charpara</option>
+            </Form.Select>
+          </Form.Group>
+
+          <Form.Group as={Col} controlId="formGridZip">
+            <Form.Label>Zip</Form.Label>
+            <Form.Control
+              type="text"
+              onChange={(e) => setZip(e.target.value)}
+              value={zip}
+              name="zip"
+            />
+          </Form.Group>
+        </Row>
+
+        <Button variant="primary" type="submit">
+          Submit
+        </Button>
       </Form>
     </FormContainer>
   );
