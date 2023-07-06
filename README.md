@@ -26,9 +26,9 @@ O = Optional
 
 #### Profile ->
             1. User/ Doctor / admin -- 3 different profile (D)
-            2. Upload Photo to cloud/ cloudinary
+            2. Upload Photo to cloud/ cloudinary (D)
             3. Update / Delete Profile by user/ADMIN (D)
-            4. Add Doctors details including medical, passing year etc
+            4. Add Doctors details including medical, passing year etc 
             5. Can upload his medical certificate as pdf
 
 #### Admin -> 

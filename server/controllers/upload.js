@@ -22,7 +22,7 @@ export const upload_file = asyncHandler(async (req, res) => {
 
 export const deleteFile = asyncHandler(async(req,res)=>{
     try {
-        await cloudinary.uploader.destroy(req.params.id);
+        const result = await cloudinary.uploader.destroy(req.params.id);
         res.json(result);
 
     } catch (err) {

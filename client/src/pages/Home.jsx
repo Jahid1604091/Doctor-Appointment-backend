@@ -36,7 +36,7 @@ export default function Home() {
                     <Card className="card mb-3">
                       <Card.Img
                         variant="top"
-                        src="https://images.pexels.com/photos/4560086/pexels-photo-4560086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=500&dpr=1"
+                        src={doctor?.user?.avatar?.url || "https://images.pexels.com/photos/4560086/pexels-photo-4560086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=500&dpr=1"}
                         className="avatar"
                       />
                       <Card.Body>
@@ -68,6 +68,10 @@ export default function Home() {
 const Wrapper = styled.section`
   .card {
     .avatar {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin: auto;
     }
   }
 `;

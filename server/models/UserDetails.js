@@ -40,8 +40,10 @@ const userSchema = mongoose.Schema({
         type: Array,
         default: []
     },
-    avatar_url:{
-        type:String
+    avatar:{
+        url:String,
+        secure_url:String,
+        public_id:String,
     },
     address:{
         city:String,

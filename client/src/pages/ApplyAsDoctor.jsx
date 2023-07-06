@@ -10,16 +10,13 @@ import { toast } from "react-hot-toast";
 
 export default function ApplyAsDoctor() {
   const { userInfo } = useSelector((state) => state.auth);
-  const [registerAsDoctor, { isLoading, isError, error }] =
-    useRegisterAsDoctorMutation();
+  const [registerAsDoctor, { isLoading, isError, error }] = useRegisterAsDoctorMutation();
   const [info, setInfo] = useState({
     phone: "",
     expertise_in: "",
     experience: "",
     fee: "",
   });
-
-  
   
   const [timeRange, setTimeRange] = useState();
 
@@ -36,16 +33,18 @@ export default function ApplyAsDoctor() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await registerAsDoctor({
+      const {data} = await registerAsDoctor({
         ...info,
         timings:timeRange,
         email: userInfo?.email,
       });
-      navigate('/');
-      toast.success('Applied Successfully ! Wait For Confirmation');
+
+        // navigate('/');
+        data?.success && toast.success('Applied Successfully ! Wait For Confirmation');
+  
     } catch (error) {
       toast.error(error.data?.msg);
-      console.log(error?.data?.message || error.error);
+      // console.log(error?.data?.msg || error.error);
     }
  
   };

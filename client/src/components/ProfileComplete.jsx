@@ -10,20 +10,18 @@ import {
 } from "../slices/userApiSlice";
 
 export default function ProfileComplete() {
-  const {
-    userInfo: { _id, name, email, isDoctor },
-  } = useSelector((state) => state.auth);
+  const {userInfo} = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
 
-  const [url, setUrl] = useState("");
+  const [avatar, setAvatar] = useState({});
+  const [url, setUrl] = useState(userInfo?.avatar?.url);
   const [file, setFile] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("Muktagacha");
   const [zip, setZip] = useState("");
 
-  const [uploadFile, { isLoading: isLoadingFileUpload }] =
-    useUploadFileMutation();
+  const [uploadFile, { isLoading: isLoadingFileUpload }] = useUploadFileMutation();
   const [uploadAvatar, { isLoading }] = useUploadAvatarMutation();
   const [updateProfile] = useUpdateProfileMutation();
 
@@ -32,11 +30,9 @@ export default function ProfileComplete() {
     const formData = new FormData();
     formData.append("image", file);
     //call uploading api
-    const {
-      data: { url, secure_url },
-    } = await uploadAvatar(formData);
-
-    setUrl(url);
+    const {data} = await uploadAvatar(formData);
+    setUrl(data?.url);
+    setAvatar(data)
   };
 
   const uploadFileHandler = async (e) => {
@@ -54,9 +50,16 @@ export default function ProfileComplete() {
   //submit handler
   const submitHandler = async (e) => {
     e.preventDefault();
-    const res = await updateProfile({ url, city, state, zip }).unwrap();
+    const res = await updateProfile({     
+      url:avatar?.url,
+      secure_url: avatar?.secure_url,
+      public_id: avatar?.public_id, 
+      city, 
+      state, 
+      zip 
+    }).unwrap();
     dispatch(setCredentials({ ...res.data }));
-    // console.log({ url, address: city, state, zip });
+
   };
 
   return (

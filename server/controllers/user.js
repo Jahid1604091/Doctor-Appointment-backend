@@ -85,8 +85,7 @@ export const get_profile = asyncHandler(async (req, res) => {
 
 //private -> api/users/profile/
 export const update_profile = asyncHandler(async (req, res) => {
-    const { city, state, zip, url } = req.body;
-    const address = `${city}, ${state}, ${zip}`;
+    const { city, state, zip, url, secure_url, public_id } = req.body;
 
     const user = await UserDetails.findById(req.user);
     if (!user) {
@@ -96,12 +95,14 @@ export const update_profile = asyncHandler(async (req, res) => {
     user.name = req.body.name || user.name
     user.email = req.body.email || user.email
 
-    user.avatar_url = url || user.avatar_url
+    user.avatar.url = url || user.avatar.url
+    user.avatar.secure_url = secure_url || user.avatar.secure_url
+    user.avatar.public_id = public_id || user.avatar.public_id
     user.address.city = city || user.address.city
     user.address.state = state || user.address.state
     user.address.zip = zip || user.address.zip
 
-    if (user.address && user.avatar_url) {
+    if (user.address && user.avatar) {
         user.isComplete = true
     }
 
@@ -137,50 +138,55 @@ export const delete_profile = asyncHandler(async (req, res) => {
 
 });
 
-
 //private -> api/users/apply-as-doctor
 export const register_as_doctor = asyncHandler(async (req, res) => {
 
-    const isExist = await Doctor.findOne({ userId: req.user._id });
-    if (isExist) {
-        res.status(400);
-        throw new Error('This Doctor Account Already Exist');
+    try {
+        const isExist = await Doctor.findOne({ userId: req.user._id });
+        if (isExist) {
+            res.status(400);
+            throw new Error('This Doctor Account Already Exist');
+        }
+    
+        const newDoctor = new Doctor({ ...req.body, status: "pending", user: req.user._id });
+        await newDoctor.save();
+    
+        if (newDoctor) {
+            //find user details
+            const user = await UserDetails.findById(req.user._id);
+    
+            //send apply notification to admin
+            const admin = await UserDetails.findOne({ role: 'admin' });
+            const unseenNotifications = admin.unseenNotifications;
+    
+            unseenNotifications.push({
+                type: 'new-doctor',
+                message: `${user.name} has applied for doctor account!`,
+                data: {
+                    doctorId: newDoctor._id,
+                    name: user.name
+                },
+                clickPath: '/admin/doctors'
+            });
+    
+            await UserDetails.findByIdAndUpdate(admin._id, { unseenNotifications });
+    
+    
+            return res.status(201).json({
+                success: true,
+                data: newDoctor,
+            });
+    
+        }
+        else {
+            res.status(400);
+            throw new Error('Invalid Data');
+        }
+    } catch (error) {
+        const errors = Object.values(error.errors)
+        res.status(400).json({ msg: errors[0].message })
     }
-
-    const newDoctor = new Doctor({ ...req.body, status: "pending", user: req.user._id });
-    await newDoctor.save();
-
-    if (newDoctor) {
-        //find user details
-        const user = await UserDetails.findById(req.user._id);
-
-        //send apply notification to admin
-        const admin = await UserDetails.findOne({ role: 'admin' });
-        const unseenNotifications = admin.unseenNotifications;
-
-        unseenNotifications.push({
-            type: 'new-doctor',
-            message: `${user.name} has applied for doctor account!`,
-            data: {
-                doctorId: newDoctor._id,
-                name: user.name
-            },
-            clickPath: '/admin/doctors'
-        });
-
-        await UserDetails.findByIdAndUpdate(admin._id, { unseenNotifications });
-
-
-        return res.status(201).json({
-            success: true,
-            data: newDoctor,
-        });
-
-    }
-    else {
-        res.status(400);
-        throw new Error('Invalid Data');
-    }
+  
 });
 
 //private -> api/users/mark-all-as-read

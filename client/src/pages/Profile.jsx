@@ -13,7 +13,7 @@ import ProfileComplete from "../components/ProfileComplete";
 
 export default function Profile() {
   const {
-    userInfo: { _id, name, email, isDoctor, isComplete },
+    userInfo: { _id, name, email, isDoctor, isComplete,avatar },
   } = useSelector((state) => state.auth);
 
   const [deleteProfile, { isLoading }] = useDeleteProfileMutation();
@@ -45,8 +45,8 @@ export default function Profile() {
                   borderRadius: "50%",
                   margin: "auto",
                 }}
-                src="https://images.pexels.com/photos/4560086/pexels-photo-4560086.jpeg?auto=compress&cs=tinysrgb&w=1260&h=500&dpr=1"
-                alt=""
+                src={avatar?.url || 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUiF_OQ_-RS1ksidGVXXFQ-nJehHFxbHfIoQ&usqp=CAU'}
+                alt={name}
               />
               <Card.Body>
                 <Card.Title>

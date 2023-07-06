@@ -2,7 +2,6 @@ import asyncHandler from "express-async-handler";
 import { Doctor } from "../models/Doctor.js";
 import { Appointment } from "../models/Appointment.js";
 import moment from "moment";
-import mongoose from 'mongoose';
 
 //private -> api/doctors/:id/
 export const get_doctor_by_id = asyncHandler(async (req, res) => {

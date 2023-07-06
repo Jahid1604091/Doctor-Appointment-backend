@@ -9,24 +9,21 @@ import {
 } from "../slices/userApiSlice";
 import { setCredentials } from "../slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MiniLoader from "../components/MiniLoader";
 
 function UpdateProfile() {
   const { userInfo } = useSelector((state) => state.auth);
 
-  const [url, setUrl] = useState(userInfo?.avatar_url);
+  const [avatar, setAvatar] = useState({});
+  const [url, setUrl] = useState(userInfo?.avatar?.url);
   const [name, setName] = useState(userInfo?.name);
   const [city, setCity] = useState(userInfo?.address?.city);
   const [state, setState] = useState(userInfo?.address?.state);
   const [zip, setZip] = useState(userInfo?.address?.zip);
 
   const dispatch = useDispatch();
-
-  // useEffect(() => {
-  //   setName(userInfo?.name);
-  //   setCity(userInfo?.address?.city);
-  // }, [userInfo]);
+  const navigate = useNavigate();
 
   const [updateProfile, { isLoading: isLoadingProfileUpdate }] = useUpdateProfileMutation();
   const [uploadAvatar, { isLoading }] = useUploadAvatarMutation();
@@ -36,20 +33,31 @@ function UpdateProfile() {
     const formData = new FormData();
     formData.append("image", file);
     //call uploading api
-    const {data:{url}} = await uploadAvatar(formData);
+    const {data} = await uploadAvatar(formData);
 
-    setUrl(url);
+    setUrl(data?.url);
+    setAvatar(data)
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-      try {
-        const res = await updateProfile({name,url,city,state,zip}).unwrap();
-        dispatch(setCredentials({ ...res.data }));
-      } catch (error) {
-        console.log(error?.data?.message || error.error);
-      }
+    try {
+      const res = await updateProfile({
+        name,
+        url:avatar?.url,
+        secure_url: avatar?.secure_url,
+        public_id: avatar?.public_id,
+        city,
+        state,
+        zip,
+      }).unwrap();
+      dispatch(setCredentials({ ...res.data }));
+      navigate("/profile");
+    } catch (error) {
+      console.log(error?.data?.message || error);
+    }
   };
+
   return (
     <FormContainer>
       <h3 className="text-center">Update Profile</h3>
@@ -57,7 +65,6 @@ function UpdateProfile() {
         <Row className="mb-1">
           <Form.Group as={Col} controlId="formGridEmail">
             <Form.Label>Name</Form.Label>
-            {isLoading && <MiniLoader />}
             <Form.Control
               type="text"
               onChange={(e) => setName(e.target.value)}
@@ -79,7 +86,13 @@ function UpdateProfile() {
             />
           </Form.Group>
           <Form.Group as={Col} controlId="formGridEmail" className="text-end">
-            <img src={url} alt="" height={150} width={200} className="rounded" />
+            <img
+              src={url}
+              alt=""
+              height={150}
+              width={200}
+              className="rounded"
+            />
           </Form.Group>
         </Row>
 
@@ -119,6 +132,9 @@ function UpdateProfile() {
         <Button variant="primary" type="submit">
           Submit
         </Button>
+        <Link to='/profile'className="btn btn-danger" type="submit">
+          Cancel
+        </Link>
       </Form>
     </FormContainer>
   );

@@ -14,13 +14,15 @@ export const get_all_users = asyncHandler(async (req, res) => {
 export const deleteUser = asyncHandler(async (req, res) => {
     const user = await UserDetails.findById(req.params.id);
     const doctor = await Doctor.findOne({ user: req.params.id });
-    await Appointment.deleteMany({
-        $or: [
-            { user: req.params.id }, { doctor: doctor._id }
-        ]
+    if (doctor) {
+        await Appointment.deleteMany({
+            $or: [
+                { user: req.params.id }, { doctor: doctor._id }
+            ]
+        }
+        );
+        await doctor.deleteOne();
     }
-    );
-    await doctor.deleteOne();
     await user.deleteOne();
 
     res.status(200).json({ success: true });
