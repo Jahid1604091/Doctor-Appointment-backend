@@ -4,12 +4,14 @@ import {
     booked_appointments,
     delete_appointment,
     delete_profile,
+    forgotPassword,
     get_profile,
     logout,
     markAllAsRead,
     new_appointment,
     register,
     register_as_doctor,
+    resetPassword,
     update_profile
 } from '../controllers/user.js';
 import { protect } from '../middleware/auth.js';
@@ -19,6 +21,8 @@ const router = express.Router();
 
 router.post('/', register);
 router.post('/auth', auth_user);
+router.post('/auth/forgot-password', forgotPassword);
+router.put('/auth/reset-password/:token', resetPassword);
 router.post('/logout', logout);
 router.route('/profile')
     .get(protect, get_profile)

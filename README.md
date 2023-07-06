@@ -6,9 +6,10 @@ O = Optional
 #### Auth -> 
             1. Normal Registration (D)
             2. Google OAuth
-            3. Forgot Pass/ Remember Me
-            4. Verification with E-mail
-            5.
+            3. Forgot Pass
+            4. Remember Me
+            5. Verification with E-mail
+            
 
 #### Home ->
             1. Add Doctor No, Location, Chamber, Others

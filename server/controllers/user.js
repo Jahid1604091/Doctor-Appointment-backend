@@ -3,7 +3,8 @@ import { Doctor } from "../models/Doctor.js";
 import { Appointment } from "../models/Appointment.js";
 import { UserDetails } from "../models/UserDetails.js";
 import moment from "moment";
-
+import sendEmail from "../utils/sendMail.js";
+import crypto from 'crypto';
 
 //public -> api/users/auth
 export const auth_user = asyncHandler(async (req, res) => {
@@ -31,6 +32,86 @@ export const auth_user = asyncHandler(async (req, res) => {
         res.status(400);
         throw new Error('Invalid Email or Password');
     }
+});
+
+//public -> api/users/auth/forgot-password
+export const forgotPassword = asyncHandler(async (req, res) => {
+    try {
+        const user = await UserDetails.findOne({ email: req.body.email });
+        if (!user) {
+            res.status(400);
+            throw new Error('This User Not Exist');
+        }
+
+        //get Reset Token
+        const resetToken = user.getResetPasswordToken();
+
+        await user.save();
+
+        //sending mail
+        const resetUrl = `${req.protocol}://${req.get('host')}/api/users/auth/reset-password/${resetToken}`;
+
+        const message = `Your Lost your password ? Please check the link to reset it \n\n ${resetUrl}`;
+
+        try {
+            await sendEmail({
+                email: user.email,
+                subject: 'Password Reset Token',
+                message
+            });
+            res.status(200).json({ data: `Email sent to ${user.email}` });
+        } catch (err) {
+            user.getResetPasswordToken = undefined;
+            user.getResetPasswordExpire = undefined;
+            res.status(500).json({ msg: 'Email Could not be sent !' });
+            console.log(err)
+        }
+
+
+    } catch (error) {
+        res.status(400).json({ msg: error.message })
+        // const errors = Object.values(error.errors)
+        // res.status(400).json({ msg: errors[0].message || error.message })
+    }
+});
+
+//public -> api/users/auth/reset-password/:token
+export const resetPassword = asyncHandler(async (req, res) => {
+    try {
+        const resetPasswordToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+
+        const user = await UserDetails.findOne({
+            resetPasswordToken,
+            resetPasswordExpire: { $gt: Date.now() }
+        });
+        if (!user) {
+            res.status(400);
+            throw new Error('Invalid Token')
+        }
+
+        user.password = req.body.password;
+        user.resetPasswordToken = undefined;
+        user.resetPasswordExpire = undefined;
+
+        await user.save();
+
+        //create new jwt token
+        res.cookie('jwt', user.getSignedJwtToken(), {
+            httpOnly: true,
+            secure: process.env.NODE_ENV !== 'development',
+            sameSite: 'strict',
+            maxAge: 30 * 24 * 24 * 60 * 60
+        })
+        return res.status(201).json({
+            success: true,
+            data: user,
+            token: user.getSignedJwtToken()
+        });
+    } catch (error) {
+        res.status(500).json({msg:"Somthing Wrng"})
+        console.log(error)
+    }
+
 });
 
 //private -> api/users/logout
@@ -147,18 +228,18 @@ export const register_as_doctor = asyncHandler(async (req, res) => {
             res.status(400);
             throw new Error('This Doctor Account Already Exist');
         }
-    
+
         const newDoctor = new Doctor({ ...req.body, status: "pending", user: req.user._id });
         await newDoctor.save();
-    
+
         if (newDoctor) {
             //find user details
             const user = await UserDetails.findById(req.user._id);
-    
+
             //send apply notification to admin
             const admin = await UserDetails.findOne({ role: 'admin' });
             const unseenNotifications = admin.unseenNotifications;
-    
+
             unseenNotifications.push({
                 type: 'new-doctor',
                 message: `${user.name} has applied for doctor account!`,
@@ -168,15 +249,15 @@ export const register_as_doctor = asyncHandler(async (req, res) => {
                 },
                 clickPath: '/admin/doctors'
             });
-    
+
             await UserDetails.findByIdAndUpdate(admin._id, { unseenNotifications });
-    
-    
+
+
             return res.status(201).json({
                 success: true,
                 data: newDoctor,
             });
-    
+
         }
         else {
             res.status(400);
@@ -186,7 +267,7 @@ export const register_as_doctor = asyncHandler(async (req, res) => {
         const errors = Object.values(error.errors)
         res.status(400).json({ msg: errors[0].message })
     }
-  
+
 });
 
 //private -> api/users/mark-all-as-read

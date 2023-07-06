@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 
 const userSchema = mongoose.Schema({
-  
+
     name: {
         type: String,
         minlength: [5, 'Name cant be less than 5 char']
@@ -40,19 +41,19 @@ const userSchema = mongoose.Schema({
         type: Array,
         default: []
     },
-    avatar:{
-        url:String,
-        secure_url:String,
-        public_id:String,
+    avatar: {
+        url: String,
+        secure_url: String,
+        public_id: String,
     },
-    address:{
-        city:String,
-        state:String,
-        zip:String,
+    address: {
+        city: String,
+        state: String,
+        zip: String,
     },
-    isComplete:{
-        type:Boolean,
-        default:false
+    isComplete: {
+        type: Boolean,
+        default: false
     },
     resetPasswordToken: String,
     resetPasswordExpire: Date,
@@ -92,5 +93,18 @@ userSchema.methods.getSignedJwtToken = function () {
 
 }
 
+userSchema.methods.getResetPasswordToken = function () {
+
+    //generate token
+    const resetToken = crypto.randomBytes(20).toString('hex');
+
+    //Hashing token
+    this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    //expire
+    this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+
+    return resetToken;
+}
 
 export const UserDetails = mongoose.model('UserDetails', userSchema);
