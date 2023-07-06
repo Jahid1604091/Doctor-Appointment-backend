@@ -49,9 +49,10 @@ export const forgotPassword = asyncHandler(async (req, res) => {
         await user.save();
 
         //sending mail
-        const resetUrl = `${req.protocol}://${req.get('host')}/api/users/auth/reset-password/${resetToken}`;
+        const resetUrl = `${process.env.DOMAIN}/reset-password/${resetToken}`;
+        // const resetUrlForApiTest = `${req.protocol}://${req.get('host')}/api/users/auth/reset-password/${resetToken}`;
 
-        const message = `Your Lost your password ? Please check the link to reset it \n\n ${resetUrl}`;
+        const message = `Lost your password ? \n\nPlease click the link to reset it. <a href=${resetUrl}>Reset</a> `;
 
         try {
             await sendEmail({
@@ -59,7 +60,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
                 subject: 'Password Reset Token',
                 message
             });
-            res.status(200).json({ data: `Email sent to ${user.email}` });
+            res.status(200).json({ success: true, data: {msg:'Email sent to '+user.email} });
         } catch (err) {
             user.getResetPasswordToken = undefined;
             user.getResetPasswordExpire = undefined;
@@ -77,6 +78,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
 
 //public -> api/users/auth/reset-password/:token
 export const resetPassword = asyncHandler(async (req, res) => {
+  
     try {
         const resetPasswordToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
 
@@ -108,7 +110,7 @@ export const resetPassword = asyncHandler(async (req, res) => {
             token: user.getSignedJwtToken()
         });
     } catch (error) {
-        res.status(500).json({msg:"Somthing Wrng"})
+        res.status(500).json({ msg: error.message })
         console.log(error)
     }
 

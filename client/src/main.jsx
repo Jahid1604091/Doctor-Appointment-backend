@@ -24,6 +24,8 @@ import Users from "./pages/admin/Users.jsx";
 import Doctors from "./pages/admin/Doctors.jsx";
 import Appointment from "./pages/Appointment.jsx";
 import Appointments from "./pages/Appointments.jsx";
+import ForgotPassword from "./pages/ForgotPassword.jsx";
+import ResetPassword from "./pages/ResetPassword.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -31,6 +33,8 @@ const router = createBrowserRouter(
       <Route index path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/about" element={<About />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
       <Route path="*" element={<NotFound />} />
 
       <Route path="" element={<PrivateRoute />}>

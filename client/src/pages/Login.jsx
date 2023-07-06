@@ -71,15 +71,19 @@ function Login() {
             Loading...
           </Button>
         ) :  (
+          <>
           <Button variant="primary" type="submit">
             Submit
-          </Button>
+          </Button> 
+          <span> Forgot Password ? <Link to="/forgot-password">RESET</Link></span>
+          </>
         )}
       </Form>
 
       <p>
         New Customer ? <Link to="/register">Register</Link>
       </p>
+    
     </FormContainer>
   );
 }

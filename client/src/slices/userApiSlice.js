@@ -22,6 +22,24 @@ export const userApiSlice = apiSlice.injectEndpoints({
             invalidatesTags: ['User']
         }),
 
+        forgotPassword: builder.mutation({
+            query: (data) => ({
+                url: `${URL}/auth/forgot-password`,
+                method: 'POST',
+                body: data
+            }),
+            invalidatesTags: ['User']
+        }),
+
+        resetPassword: builder.mutation({
+            query: (data) => ({
+                url: `${URL}/auth/reset-password/${data.token}`,
+                method: 'PUT',
+                body:data
+            }),
+            invalidatesTags: ['User']
+        }),
+
         registerAsDoctor: builder.mutation({
             query: (data) => ({
                 url: `${URL}/apply-as-doctor`,
@@ -132,5 +150,7 @@ export const {
     useDeleteAppointmentMutation,
     useUploadFileMutation,
     useUploadAvatarMutation,
+    useForgotPasswordMutation,
+    useResetPasswordMutation,
 
 } = userApiSlice;
