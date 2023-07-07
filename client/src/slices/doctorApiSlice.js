@@ -19,6 +19,14 @@ export const doctorApiSlice = apiSlice.injectEndpoints({
                     body:data
                 })
         }),
+        approveAppointment: builder.mutation({
+            query: (data) => ({
+                url: `${URL}/appointments/${data.id}`,
+                method: 'PUT',
+                body:data
+            }),
+            invalidatesTags: ['User']
+        }),
 
     })
 });
@@ -27,4 +35,5 @@ export const {
     useGetDoctorByIdQuery,
     useCheckAvailabilityMutation,
     useGetDoctorDetailsByUserIdQuery,
+    useApproveAppointmentMutation,
 } = doctorApiSlice;

@@ -21,9 +21,6 @@ async function sendEmail(options) {
     subject: options.subject,
     html: `
       <p>${options.message}</p>
-
-      Regards,
-      <b>Doctor Portal<b/>
     `
   }
   const info = await transporter.sendMail(message);

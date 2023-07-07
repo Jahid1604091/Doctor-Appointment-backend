@@ -139,7 +139,7 @@ export default function Appointment() {
             <Col md={6}>
               <Card className="text-center p-1">
                 <Image
-                  src="https://images.pexels.com/photos/4560086/pexels-photo-4560086.jpeg?auto=compress&cs=tinysrgb&w=171&h=180&dpr=1"
+                  src={ data?.user?.avatar?.url || "https://images.pexels.com/photos/4560086/pexels-photo-4560086.jpeg?auto=compress&cs=tinysrgb&w=171&h=180&dpr=1"}
                   roundedCircle
                 />
                 <Card.Body>
@@ -148,8 +148,8 @@ export default function Appointment() {
                     {data?.expertise_in}
                   </Card.Subtitle>
                   <Card.Text>
-                    <span>Fee Per Visit (BDT) : {data?.fee}</span> <br />
-                    <span>Degree : </span>
+                    <span> Per Visit : <strong>{data?.fee}</strong> Tk</span> <br />
+                  
                   </Card.Text>
                 </Card.Body>
               </Card>

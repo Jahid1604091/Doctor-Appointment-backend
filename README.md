@@ -6,7 +6,7 @@ O = Optional
 #### Auth -> 
             1. Normal Registration (D)
             2. Google OAuth
-            3. Forgot Pass
+            3. Forgot and Reset Password with mail (D)
             4. Remember Me
             5. Verification with E-mail
             
@@ -14,6 +14,7 @@ O = Optional
 #### Home ->
             1. Add Doctor No, Location, Chamber, Others
             2. Pagination
+            3. My Upcoming Appointments
 
 #### Apply as doctor ->
             1. Send Instant Notification to Admin (Socket IO) / Send Email (O)
@@ -23,7 +24,10 @@ O = Optional
 #### Appointments ->
             1. Check the availability feature (D)
             2. Separate the appointments for doctor and user (D)
-            2. Cancelling on both End (D)
+            3. Cancelling on both End (D)
+            4. Approve appointment and send a zoom meeting link/approval notification to mail and socket
+            5. After meet send the prescription to patients mail as pdf
+            6. Automatic Delete after the scheduled date/time
 
 #### Profile ->
             1. User/ Doctor / admin -- 3 different profile (D)
@@ -38,3 +42,4 @@ O = Optional
             
 
 #### Payment Gateway
+            1. After Payment Successfull Appointment will be approved

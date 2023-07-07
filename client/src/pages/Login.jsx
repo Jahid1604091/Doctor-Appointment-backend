@@ -71,12 +71,12 @@ function Login() {
             Loading...
           </Button>
         ) :  (
-          <>
+          <div className="d-flex justify-content-between">
           <Button variant="primary" type="submit">
             Submit
           </Button> 
-          <span> Forgot Password ? <Link to="/forgot-password">RESET</Link></span>
-          </>
+          <p> Forgot Password ? <Link to="/forgot-password">RESET</Link></p>
+          </div>
         )}
       </Form>
 

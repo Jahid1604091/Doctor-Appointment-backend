@@ -5,6 +5,7 @@ import { UserDetails } from "../models/UserDetails.js";
 import moment from "moment";
 import sendEmail from "../utils/sendMail.js";
 import crypto from 'crypto';
+import ErrorResponse from "../utils/errorResponse.js";
 
 //public -> api/users/auth
 export const auth_user = asyncHandler(async (req, res) => {
@@ -126,13 +127,12 @@ export const logout = asyncHandler(async (req, res) => {
 });
 
 //public -> api/users
-export const register = asyncHandler(async (req, res) => {
+export const register = async (req, res,next) => {
 
     try {
         const isExist = await UserDetails.findOne({ email: req.body.email });
         if (isExist) {
-            res.status(400);
-            throw new Error('User Already Exist')
+           next(new ErrorResponse('User Already Exist',400));
         }
         const user = await UserDetails.create(req.body);
 
@@ -151,15 +151,14 @@ export const register = asyncHandler(async (req, res) => {
 
         }
         else {
-            res.status(400);
-            throw new Error('Invalid Data');
+            next(new ErrorResponse('Invalid Data',400));
         }
     } catch (error) {
         const errors = Object.values(error.errors)
         res.status(400).json({ msg: errors[0].message })
     }
 
-});
+};
 
 //private -> api/users/profile/
 export const get_profile = asyncHandler(async (req, res) => {
@@ -291,11 +290,6 @@ export const markAllAsRead = asyncHandler(async (req, res) => {
 //private -> api/users/apply-as-doctor
 export const new_appointment = asyncHandler(async (req, res) => {
 
-    // const isExist = await Appointment.findOne({userId:req.user._id});
-    // if (isExist) {
-    //     res.status(400);
-    //     throw new Error('This Appointment Already Exist');
-    // }
     const { time, date } = req.body;
     const doctor = await Doctor.findById(req.body.doctor);
     const doctor_user_table = await UserDetails.findById(doctor.user);
@@ -374,6 +368,7 @@ export const booked_appointments = asyncHandler(async (req, res) => {
                     date: 1,
                     time: 1,
                     status: 1,
+                    isPaid:1,
                     patientName: "$userInfo.name",
 
                 }
