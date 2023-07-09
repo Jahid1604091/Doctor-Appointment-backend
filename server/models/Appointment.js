@@ -25,21 +25,22 @@ const appointmentSchema = mongoose.Schema({
     },
     isPaid: {
         type: Boolean,
-        required: true,
         default: false
     },
+
     meetBy: {
         type: String,
         enum: ['online', 'offline'],
         default: 'online'
     },
-    meetAt:{
-        type:String,
-        required:[true,'Please add Location or meeting Link']
+    meetAt: {
+        type: String,
     },
     paidAt: {
         type: Date,
-
+    },
+    paymentMethod: {
+        type: String
     },
     approvedAt: {
         type: Date,

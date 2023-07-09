@@ -5,6 +5,7 @@ import userRoutes from './routes/user.js';
 import doctorRoutes from './routes/doctor.js';
 import adminRoutes from './routes/admin/users.js';
 import uploadRoutes from './routes/upload.js';
+import sslRoutes from './routes/ssl.js';
 import { errHandler, notFound } from './middleware/errorHandler.js';
 import { connectDB } from './config/db.js';
 import cookieParser from 'cookie-parser';
@@ -32,6 +33,7 @@ app.use('/api/users',userRoutes);
 app.use('/api/doctors',doctorRoutes);
 app.use('/api/admin',adminRoutes);
 app.use('/api/upload',uploadRoutes);
+app.use('/api/payment',sslRoutes);
 
 //make a folder static
 // app.use('/uploads',express.static(path.join(__dirname,'/uploads')))
