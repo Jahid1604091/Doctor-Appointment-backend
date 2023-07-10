@@ -8,36 +8,52 @@ import { Appointment } from "../../models/Appointment.js";
 export const get_all_users = asyncHandler(async (req, res) => {
     let query;
 
-    const reqQuery = {...req.query};
+    const reqQuery = { ...req.query };
     //fields to exclude
-    const removeFields = ['select','sort'];
-    
+    const removeFields = ['select', 'sort', 'page', 'limit'];
+
     //loop over removeFields and delete from reqQuery
-    removeFields.forEach(field=>delete reqQuery[field]);
+    removeFields.forEach(field => delete reqQuery[field]);
 
     let queryString = JSON.stringify(reqQuery);
-    
-    queryString = queryString.replace(/\b(gt|gte|lt|lte|in)\b/g,match=>`$${match}`);
-    
+
+    queryString = queryString.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+
     query = UserDetails.find(JSON.parse(queryString));
     // query = UserDetails.find(JSON.parse(queryString)).select('name email);
 
-    if(req.query.select){
+    if (req.query.select) {
         const fields = req.query.select.split(',').join(' ');
         query = query.select(fields);
     }
-    if(req.query.sort){
+    if (req.query.sort) {
         const sortBy = req.query.sort.split(',').join(' ');
         query = query.sort(sortBy);
         console.log(query)
     }
-    else{
+    else {
         query = query.sort('-createdAt');
     }
 
-    const users = await query;
+    //pagination
+    const page = Number(req.query.page, 10) || 1;
+    const limit = Number(req.query.limit, 10) || 1;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const total = await UserDetails.countDocuments();
 
-    res.status(200).json({count:users.length,data:users});
+    query = query.skip(startIndex).limit(limit);
+
+    const users = await query;
+    const pagination = {};
+    if(endIndex < total){
+        pagination.next = {page:page + 1, limit}
+    }
+    if(startIndex > 0){
+        pagination.prev = {page:page - 1, limit}
+    }
+
+    res.status(200).json({ count: users.length,pagination, data: users });
     // res.status(200).json(users);
 });
 
