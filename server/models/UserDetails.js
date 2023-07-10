@@ -61,7 +61,15 @@ const userSchema = mongoose.Schema({
     emailTokenExpire: Date,
     verified: Boolean,
 
-}, { timestamps: true })
+
+
+},
+    {
+        //reverse populate
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true },
+    },
+    { timestamps: true })
 
 
 //encrypt pass
@@ -106,5 +114,19 @@ userSchema.methods.getResetPasswordToken = function () {
 
     return resetToken;
 }
+
+//reverse populate with virtuals
+userSchema.virtual('doctor',{
+    ref:'Doctor',
+    localField:'_id',
+    foreignField:'user',
+    
+});
+userSchema.virtual('appointments',{
+    ref:'Appointment',
+    localField:'_id',
+    foreignField:'user',
+    
+});
 
 export const UserDetails = mongoose.model('UserDetails', userSchema);

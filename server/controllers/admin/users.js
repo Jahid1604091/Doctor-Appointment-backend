@@ -19,7 +19,7 @@ export const get_all_users = asyncHandler(async (req, res) => {
 
     queryString = queryString.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 
-    query = UserDetails.find(JSON.parse(queryString));
+    query = UserDetails.find(JSON.parse(queryString)).populate('doctor appointments');
     // query = UserDetails.find(JSON.parse(queryString)).select('name email);
 
     if (req.query.select) {
@@ -36,8 +36,8 @@ export const get_all_users = asyncHandler(async (req, res) => {
     }
 
     //pagination
-    const page = Number(req.query.page, 10) || 1;
-    const limit = Number(req.query.limit, 10) || 1;
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 1;
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
     const total = await UserDetails.countDocuments();
@@ -53,8 +53,8 @@ export const get_all_users = asyncHandler(async (req, res) => {
         pagination.prev = {page:page - 1, limit}
     }
 
-    res.status(200).json({ count: users.length,pagination, data: users });
-    // res.status(200).json(users);
+    // res.status(200).json({ count: users.length,pagination, data: users });
+    res.status(200).json(users);
 });
 
 //private by admin -> api/admin/users/:id
@@ -85,6 +85,7 @@ export const get_all_doctors = asyncHandler(async (req, res) => {
     // const doctors = await Doctor.find({},{createdAt:0,updatedAt:0,__v:0}).explain('queryPlanner');
     const doctors = userId ? await Doctor.find({ user: userId }).populate({ path: 'user', select: 'name' }) :
         await Doctor.find({}).populate({ path: 'user', select: 'name' });
+  
     res.status(200).json(doctors);
 });
 
