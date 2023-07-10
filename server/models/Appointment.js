@@ -31,7 +31,6 @@ const appointmentSchema = mongoose.Schema({
     meetBy: {
         type: String,
         enum: ['online', 'offline'],
-        default: 'online'
     },
     meetAt: {
         type: String,

@@ -7,7 +7,7 @@ export const notFound = (req, res, next) => {
 }
 
 export const errHandler = (err, req, res, next) => {
-    console.log(err)
+
     let status_code = err.statusCode || 500;
     let msg = err.message || 'Server Error';
 

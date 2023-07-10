@@ -6,60 +6,65 @@ import { Appointment } from "../../models/Appointment.js";
 
 //private by admin -> api/admin/users
 export const get_all_users = asyncHandler(async (req, res) => {
-    let query;
+    // let query;
 
-    const reqQuery = { ...req.query };
-    //fields to exclude
-    const removeFields = ['select', 'sort', 'page', 'limit'];
+    // let reqQuery = { ...req.query };
+    // reqQuery.role = 'user'
+    // //fields to exclude
+    // const removeFields = ['select', 'sort', 'page', 'limit'];
 
-    //loop over removeFields and delete from reqQuery
-    removeFields.forEach(field => delete reqQuery[field]);
+    // //loop over removeFields and delete from reqQuery
+    // removeFields.forEach(field => delete reqQuery[field]);
 
-    let queryString = JSON.stringify(reqQuery);
+    // let queryString = JSON.stringify(reqQuery);
 
-    queryString = queryString.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+    // queryString = queryString.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 
-    query = UserDetails.find(JSON.parse(queryString)).populate('doctor appointments');
-    // query = UserDetails.find(JSON.parse(queryString)).select('name email);
+    // query = UserDetails.find(JSON.parse(queryString)).populate('doctor appointments');
+    // // query = UserDetails.find(JSON.parse(queryString)).select('name email);
 
-    if (req.query.select) {
-        const fields = req.query.select.split(',').join(' ');
-        query = query.select(fields);
-    }
-    if (req.query.sort) {
-        const sortBy = req.query.sort.split(',').join(' ');
-        query = query.sort(sortBy);
-        console.log(query)
-    }
-    else {
-        query = query.sort('-createdAt');
-    }
+    // if (req.query.select) {
+    //     const fields = req.query.select.split(',').join(' ');
+    //     query = query.select(fields);
+    // }
+    // if (req.query.sort) {
+    //     const sortBy = req.query.sort.split(',').join(' ');
+    //     query = query.sort(sortBy);
+       
+    // }
+    // else {
+    //     query = query.sort('-createdAt');
+    // }
 
-    //pagination
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 1;
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-    const total = await UserDetails.countDocuments();
+    // //pagination
+    // const page = Number(req.query.page) || 1;
+    // const limit = Number(req.query.limit) || 50;
+    // const startIndex = (page - 1) * limit;
+    // const endIndex = page * limit;
+    // const total = await UserDetails.countDocuments();
 
-    query = query.skip(startIndex).limit(limit);
+    // query = query.skip(startIndex).limit(limit);
 
-    const users = await query;
-    const pagination = {};
-    if(endIndex < total){
-        pagination.next = {page:page + 1, limit}
-    }
-    if(startIndex > 0){
-        pagination.prev = {page:page - 1, limit}
-    }
+    // const users = await query;
+    // const pagination = {};
+    // if(endIndex < total){
+    //     pagination.next = {page:page + 1, limit}
+    // }
+    // if(startIndex > 0){
+    //     pagination.prev = {page:page - 1, limit}
+    // }
 
-    // res.status(200).json({ count: users.length,pagination, data: users });
-    res.status(200).json(users);
+    res.status(200).json( res.filterQueryPaginateResults );
+    // res.status(200).json(users);
 });
 
 //private by admin -> api/admin/users/:id
-export const deleteUser = asyncHandler(async (req, res) => {
+export const deleteUser = asyncHandler(async (req, res,next) => {
     const user = await UserDetails.findById(req.params.id);
+    if(!user){
+        res.status(404);
+        throw new Error('user not found')
+    }
     const doctor = await Doctor.findOne({ user: req.params.id });
     if (doctor) {
         await Appointment.deleteMany({

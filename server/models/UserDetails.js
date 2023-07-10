@@ -122,10 +122,12 @@ userSchema.virtual('doctor',{
     foreignField:'user',
     
 });
+
 userSchema.virtual('appointments',{
     ref:'Appointment',
     localField:'_id',
     foreignField:'user',
+    justOne:false
     
 });
 

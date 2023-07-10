@@ -41,5 +41,9 @@ const doctorSchema = mongoose.Schema({
     }
 }, { timestamps: true });
 
+doctorSchema.pre('remove',async function(next){
+    this.model('Appointment').deleteMany({doctor:this._id});
+    next();
+})
 
 export const Doctor = mongoose.model('Doctor', doctorSchema);
