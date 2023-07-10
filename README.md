@@ -15,6 +15,7 @@ O = Optional
             1. Add Doctor No, Location, Chamber, Others
             2. Pagination
             3. My Upcoming Appointments
+            4. Search desired doctor
 
 #### Apply as doctor ->
             1. Send Instant Notification to Admin (Socket IO) / Send Email (O)
@@ -25,7 +26,7 @@ O = Optional
             1. Check the availability feature (D)
             2. Separate the appointments for doctor and user (D)
             3. Cancelling on both End (D)
-            4. Approve appointment and send a zoom meeting link/approval notification to mail and socket
+            4. Approve appointment and send a zoom meeting link/approval notification to mail (D) and socket
             5. After meet send the prescription to patients mail as pdf
             6. Automatic Delete after the scheduled date/time
 
@@ -42,4 +43,4 @@ O = Optional
             
 
 #### Payment Gateway
-            1. After Payment Successfull Appointment will be approved
+            1. After Payment Successfull Appointment will be approved (D)

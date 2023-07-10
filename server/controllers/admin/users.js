@@ -6,8 +6,39 @@ import { Appointment } from "../../models/Appointment.js";
 
 //private by admin -> api/admin/users
 export const get_all_users = asyncHandler(async (req, res) => {
-    const users = await UserDetails.find({ role: 'user' });
-    res.status(200).json(users);
+    let query;
+
+    const reqQuery = {...req.query};
+    //fields to exclude
+    const removeFields = ['select','sort'];
+    
+    //loop over removeFields and delete from reqQuery
+    removeFields.forEach(field=>delete reqQuery[field]);
+
+    let queryString = JSON.stringify(reqQuery);
+    
+    queryString = queryString.replace(/\b(gt|gte|lt|lte|in)\b/g,match=>`$${match}`);
+    
+    query = UserDetails.find(JSON.parse(queryString));
+    // query = UserDetails.find(JSON.parse(queryString)).select('name email);
+
+    if(req.query.select){
+        const fields = req.query.select.split(',').join(' ');
+        query = query.select(fields);
+    }
+    if(req.query.sort){
+        const sortBy = req.query.sort.split(',').join(' ');
+        query = query.sort(sortBy);
+        console.log(query)
+    }
+    else{
+        query = query.sort('-createdAt');
+    }
+
+    const users = await query;
+
+    res.status(200).json({count:users.length,data:users});
+    // res.status(200).json(users);
 });
 
 //private by admin -> api/admin/users/:id
