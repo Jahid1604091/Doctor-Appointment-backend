@@ -10,7 +10,7 @@ const filterQueryPaginate = (model, populate) => async (req, res, next) => {
     }
 
     //fields to exclude
-    const removeFields = ['select', 'sort', 'page', 'limit'];
+    const removeFields = ['select', 'sort', 'page', 'limit', 'search'];
 
     //loop over removeFields and delete from reqQuery
     removeFields.forEach(field => delete reqQuery[field]);
@@ -29,39 +29,50 @@ const filterQueryPaginate = (model, populate) => async (req, res, next) => {
     if (req.query.sort) {
         const sortBy = req.query.sort.split(',').join(' ');
         query = query.sort(sortBy);
-
     }
     else {
-        query = query.sort('-createdAt');
+        query = query.sort('createdAt');
     }
 
     //pagination
     const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 50;
+    const limit = Number(req.query.limit) || 3; //pageSize
+
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
-    const total = await model.countDocuments();
-
-    query = query.skip(startIndex).limit(limit);
-
+    
+    const keyword = req.query.search ? {
+        '$or': [
+            { name: { $regex: req.query.search, $options: 'i' } },
+            { email: { $regex: req.query.search, $options: 'i' } }
+        ]
+    } : {};
+    const total = await model.countDocuments().where('role'); //pages
+    //use '$or' and concat for multiple fields
+    query = query.find(keyword).skip(startIndex).limit(limit);
 
     if (populate) {
         query = query.populate(populate);
     }
 
     const results = await query;
-    const pagination = {};
-    if (endIndex < total) {
-        pagination.next = { page: page + 1, limit }
-    }
-    if (startIndex > 0) {
-        pagination.prev = { page: page - 1, limit }
-    }
+    // const pagination = {};
 
+    // if (endIndex < total) {
+    //     pagination.next = { page: page + 1, limit }
+    // }
+    // if (startIndex > 0) {
+    //     pagination.prev = { page: page - 1, limit }
+    // }
+
+    //- the admin
     res.filterQueryPaginateResults = {
         success: true,
         count: results.length,
-        pagination,
+        total:total - 1,
+        // pagination,
+        page,
+        pages: Math.ceil(total / limit),
         data: results
     }
     next();
