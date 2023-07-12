@@ -27,7 +27,7 @@ O = Optional
             2. Separate the appointments for doctor and user (D)
             3. Cancelling on both End (D)
             4. Approve appointment and send a zoom meeting link/approval notification to mail (D) and socket
-            5. After meet send the prescription to patients mail as pdf
+            5. After meet send the prescription to patients mail as pdf (D)
             6. Automatic Delete after the scheduled date/time
 
 #### Profile ->
