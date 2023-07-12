@@ -21,7 +21,8 @@ async function sendEmail(options) {
     subject: options.subject,
     html: `
       <p>${options.message}</p>
-    `
+    `,
+    attachments:options.attachments
   }
   const info = await transporter.sendMail(message);
 

@@ -44,6 +44,14 @@ const appointmentSchema = mongoose.Schema({
     approvedAt: {
         type: Date,
     },
+    isVisited:{
+        type:Boolean,
+        default:false
+    },
+    isPrescriptionSent:{
+        type:Boolean,
+        default:false
+    }
 
 }, { timestamps: true });
 

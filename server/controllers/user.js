@@ -369,7 +369,9 @@ export const booked_appointments = asyncHandler(async (req, res) => {
                     time: 1,
                     status: 1,
                     isPaid:1,
+                    isVisited:1,
                     patientName: "$userInfo.name",
+                    patientEmail: "$userInfo.email",
 
                 }
             }
