@@ -54,7 +54,7 @@ export const get_all_users = asyncHandler(async (req, res) => {
     //     pagination.prev = {page:page - 1, limit}
     // }
 
-    res.status(200).json( res.filterQueryPaginateResults );
+    res.status(200).json(res.filterQueryPaginateResults);
     // res.status(200).json(users);
 });
 

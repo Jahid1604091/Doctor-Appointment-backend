@@ -23,7 +23,7 @@ export const protect = asyncHandler(async(req,res,next)=>{
     }
 });
 
-export const protectByAdmin = asyncHandler(async(req,res,next)=>{
+export const protectByAdmin  = asyncHandler(async(req,res,next)=>{
     if(req.user && req.user.role === 'admin'){
         next();
     }

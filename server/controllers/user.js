@@ -6,9 +6,11 @@ import moment from "moment";
 import sendEmail from "../utils/sendMail.js";
 import crypto from 'crypto';
 import ErrorResponse from "../utils/errorResponse.js";
+import { addNewUser, getUser, removeUser } from "../utils/socket.js";
 
 //public -> api/users/auth
 export const auth_user = asyncHandler(async (req, res) => {
+    const socket = req.app.get('socket');
 
     const { email, password } = req.body;
     const user = await UserDetails.findOne({ email });
@@ -22,6 +24,12 @@ export const auth_user = asyncHandler(async (req, res) => {
             sameSite: 'strict',
             maxAge: 30 * 24 * 24 * 60 * 60
         })
+
+        //trigger socket
+        socket.on("newUser", (username) => {
+            addNewUser(username, socket.id);
+        });
+
         return res.status(200).json({
             success: true,
             data: user,
@@ -61,7 +69,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
                 subject: 'Password Reset Token',
                 message
             });
-            res.status(200).json({ success: true, data: {msg:'Email sent to '+user.email} });
+            res.status(200).json({ success: true, data: { msg: 'Email sent to ' + user.email } });
         } catch (err) {
             user.getResetPasswordToken = undefined;
             user.getResetPasswordExpire = undefined;
@@ -79,7 +87,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
 
 //public -> api/users/auth/reset-password/:token
 export const resetPassword = asyncHandler(async (req, res) => {
-  
+
     try {
         const resetPasswordToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
 
@@ -119,6 +127,10 @@ export const resetPassword = asyncHandler(async (req, res) => {
 
 //private -> api/users/logout
 export const logout = asyncHandler(async (req, res) => {
+    const socket = req.app.get('socket');
+    socket.on("disconnect", () => {
+        removeUser(socket.id);
+      });
     res.cookie('jwt', '', {
         httpOnly: true,
         expires: new Date(0)
@@ -127,12 +139,12 @@ export const logout = asyncHandler(async (req, res) => {
 });
 
 //public -> api/users
-export const register = async (req, res,next) => {
+export const register = async (req, res, next) => {
 
     try {
         const isExist = await UserDetails.findOne({ email: req.body.email });
         if (isExist) {
-           next(new ErrorResponse('User Already Exist',400));
+            next(new ErrorResponse('User Already Exist', 400));
         }
         const user = await UserDetails.create(req.body);
 
@@ -151,7 +163,7 @@ export const register = async (req, res,next) => {
 
         }
         else {
-            next(new ErrorResponse('Invalid Data',400));
+            next(new ErrorResponse('Invalid Data', 400));
         }
     } catch (error) {
         const errors = Object.values(error.errors)
@@ -290,6 +302,9 @@ export const markAllAsRead = asyncHandler(async (req, res) => {
 //private -> api/users/apply-as-doctor
 export const new_appointment = asyncHandler(async (req, res) => {
 
+    const socket = req.app.get('socket');
+    const io = req.app.get('socketio');
+
     const { time, date } = req.body;
     const doctor = await Doctor.findById(req.body.doctor);
     const doctor_user_table = await UserDetails.findById(doctor.user);
@@ -313,6 +328,13 @@ export const new_appointment = asyncHandler(async (req, res) => {
         const user = await UserDetails.findById(req.body.user);
 
         //send appointment notification to doctor
+        // socket.on('new_appointment_send', ({ patientName, doctorName, type }) => {
+        //     const receiver = getUser(doctorName)
+        //     io.to(receiver.socketId).emit('new_appointment_get', {
+        //         patientName, type
+        //     })
+        // })
+
         const unseenNotifications = doctor_user_table.unseenNotifications;
 
         unseenNotifications.push({
@@ -368,8 +390,8 @@ export const booked_appointments = asyncHandler(async (req, res) => {
                     date: 1,
                     time: 1,
                     status: 1,
-                    isPaid:1,
-                    isVisited:1,
+                    isPaid: 1,
+                    isVisited: 1,
                     patientName: "$userInfo.name",
                     patientEmail: "$userInfo.email",
 

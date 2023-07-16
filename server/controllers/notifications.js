@@ -1,10 +1,7 @@
 import asyncHandler from "express-async-handler";
 
-//private -> api/notifications/:id
-export const send_notification = asyncHandler(async (req, res) => {
-    const data = { 'test': "Test" }
-    // await io.sockets.in(req.params.id).emit(`message`, data)
-    res.json({ msg: "Data sent!" });
-    //notify user (data)
-
+export const sendNotification = asyncHandler(async (req, res) => {
+    const io = req.app.get('socketio');
+    const data = req.body;
+    res.json({ msg: "Data Sent" })
 });
