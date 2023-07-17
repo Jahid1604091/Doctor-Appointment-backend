@@ -166,7 +166,8 @@ export const reviewDoctor = asyncHandler(async (req, res, next) => {
         return next(new ErrorResponse('Please add review and rating', 400))
     }
     const review = {
-        ...req.body,
+        rating:req.body.rating,
+        comment:req.body.comment,
         name: req.user.name,
         user: req.user._id,
     }
@@ -174,13 +175,13 @@ export const reviewDoctor = asyncHandler(async (req, res, next) => {
     doctor.reviews.push(review)
 
     //total reviews
-    doctor.numReviews = doctor.reviews.length
+    doctor.numReviews = doctor.reviews.length;
     //avg rating
     doctor.rating = doctor.reviews.reduce((acc, prod) => prod.rating + acc, 0) / doctor.reviews.length
     await doctor.save();
     return res.status(201).json({
         success: true,
-        message: 'review added'
+        msg: 'Review Added !'
     });
 });
 
