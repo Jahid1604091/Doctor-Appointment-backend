@@ -1,5 +1,27 @@
 import mongoose from 'mongoose';
 
+const reviewSchema = mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    rating: {
+        type: Number,
+        required: true
+    },
+    comment: {
+        type: String,
+        required: true
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: 'UserDetails'
+    },
+}, {
+    timestamps: true
+});
+
 const doctorSchema = mongoose.Schema({
 
     user:{
@@ -39,7 +61,18 @@ const doctorSchema = mongoose.Schema({
     },
     certificate_url:{
         type:String
-    }
+    },
+    reviews: [reviewSchema],
+    rating: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+    numReviews: {
+        type: Number,
+        required: true,
+        default: 0
+    },
 }, { timestamps: true });
 
 doctorSchema.pre('remove',async function(next){

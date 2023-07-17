@@ -150,3 +150,37 @@ export const make_prescription = asyncHandler(async (req, res) => {
 
 });
 
+//@route    /api/doctors/:id/review
+//@desc     post    review doctor
+//@access   protected
+export const reviewDoctor = asyncHandler(async (req, res, next) => {
+    const doctor = await Doctor.findById(req.params.id);
+    //check if doctor already reviewed
+    if (doctor.reviews.find(u => u.user.toString() === req.user._id.toString())) {
+        return next(new ErrorResponse('You can review a doctor once', 400))
+    }
+    //else
+
+    //review
+    if (!req.body.rating || !req.body.comment) {
+        return next(new ErrorResponse('Please add review and rating', 400))
+    }
+    const review = {
+        ...req.body,
+        name: req.user.name,
+        user: req.user._id,
+    }
+
+    doctor.reviews.push(review)
+
+    //total reviews
+    doctor.numReviews = doctor.reviews.length
+    //avg rating
+    doctor.rating = doctor.reviews.reduce((acc, prod) => prod.rating + acc, 0) / doctor.reviews.length
+    await doctor.save();
+    return res.status(201).json({
+        success: true,
+        message: 'review added'
+    });
+});
+

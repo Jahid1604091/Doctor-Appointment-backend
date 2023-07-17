@@ -13,14 +13,15 @@ O = Optional
 
 #### Home ->
             1. Add Doctor No, Location, Chamber, Others
-            2. Pagination
+            2. Pagination (D)
             3. My Upcoming Appointments
-            4. Search desired doctor
+            4. Search desired doctor (D)
 
-#### Apply as doctor ->
+#### Apply as doctor/Doctor ->
             1. Send Instant Notification to Admin (Socket IO) / Send Email (O)
             2. Checking Time Range / Edit
             3. Checking Doctors Authenticity (***)
+            4. Rating and feedback on the doctor
             
 #### Appointments ->
             1. Check the availability feature (D)
@@ -35,12 +36,12 @@ O = Optional
             2. Upload Photo to cloud/ cloudinary (D)
             3. Update / Delete Profile by user/ADMIN (D)
             4. Add Doctors details including medical, passing year etc 
-            5. Can upload his medical certificate as pdf
+            5. Can upload his medical certificate as pdf/image
 
 #### Admin -> 
             1. Check doctors details and approve or delete (D)
-            2. check certificate via online
+            2. check doctors certificate via online
             
 
 #### Payment Gateway
-            1. After Payment Successfull Appointment will be approved (D)
+            1. After Payment Successful Appointment will be approved (D)

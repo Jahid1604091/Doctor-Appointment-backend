@@ -99,24 +99,39 @@ export const get_all_doctors = asyncHandler(async (req, res) => {
 
 //private by admin -> api/admin/approved-doctors
 export const get_all_approved_doctors = asyncHandler(async (req, res) => {
+    //pagination
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 3; //pageSize
+    const startIndex = (page - 1) * limit;
+
     let query;
     if (req.query.search) {
         const users = await (UserDetails.find({ name: { $regex: req.query.search, $options: "i" } }))
         const userIds = users?.map(user => user._id)
         query = Doctor.find({
             $or: [
-                { user: { $in: userIds, $nin: req.user._id } },
-                { expertise_in: { $regex: req.query.search, $options: "i" } }
-            ]
+                { user: { $in: userIds } },
+                { expertise_in: { $regex: req.query.search, $options: "i"} }
+            ],
+           
         })
-            .populate('user');
+            .populate('user')
+            .skip(startIndex).limit(limit);
     }
     else {
-        query = Doctor.find({ status: 'approved', user: { $ne: req.user._id } }).populate('user');
+        query = Doctor.find({ status: 'approved', user: { $ne: req.user._id } }).populate('user').skip(startIndex).limit(limit);
     }
 
-    const doctors = await query;
-    res.status(200).json(doctors);
+    const results = await query;
+    const total = await Doctor.countDocuments();
+    res.status(200).json({
+        success: true,
+        count: results.length,
+        total:  total,
+        page,
+        pages: Math.ceil(total / limit),
+        data: results
+    });
 
     //*****aggregate******
     // let doctorsWithUserInfo = await Doctor.aggregate([

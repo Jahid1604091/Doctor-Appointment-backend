@@ -5,7 +5,8 @@ import {
     checkAvailability,
     get_doctor_by_id,
     get_doctor_by_userId,
-    make_prescription
+    make_prescription,
+    reviewDoctor
 }from '../controllers/doctor.js';
 
 const router = express.Router();
@@ -15,6 +16,7 @@ router.get('/get-doctor/:userId', protect, get_doctor_by_userId);
 router.post('/check-availability', protect, checkAvailability);
 router.put('/appointments/:appointment_id', protect, approve_appointment);
 router.post('/appointments/:appointment_id', protect, make_prescription);
+router.post('/:id/review', protect, reviewDoctor);
 
 
 export default router;
