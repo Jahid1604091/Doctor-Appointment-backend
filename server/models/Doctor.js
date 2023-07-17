@@ -8,7 +8,8 @@ const doctorSchema = mongoose.Schema({
     },
     email:{
         type:String,
-        required:true
+        required:true,
+        
     },
     expertise_in: {
         type: String,

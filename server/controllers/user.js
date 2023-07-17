@@ -349,7 +349,6 @@ export const booked_appointments = asyncHandler(async (req, res) => {
         const appointments_as_doctor = await Appointment.aggregate([
             {
                 $lookup: {
-
                     from: 'userdetails',
                     localField: 'user',
                     foreignField: '_id',

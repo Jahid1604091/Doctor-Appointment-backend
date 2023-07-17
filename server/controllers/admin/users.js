@@ -30,7 +30,7 @@ export const get_all_users = asyncHandler(async (req, res) => {
     // if (req.query.sort) {
     //     const sortBy = req.query.sort.split(',').join(' ');
     //     query = query.sort(sortBy);
-       
+
     // }
     // else {
     //     query = query.sort('-createdAt');
@@ -54,14 +54,14 @@ export const get_all_users = asyncHandler(async (req, res) => {
     //     pagination.prev = {page:page - 1, limit}
     // }
 
-    res.status(200).json( res.filterQueryPaginateResults );
+    res.status(200).json(res.filterQueryPaginateResults);
     // res.status(200).json(users);
 });
 
 //private by admin -> api/admin/users/:id
-export const deleteUser = asyncHandler(async (req, res,next) => {
+export const deleteUser = asyncHandler(async (req, res, next) => {
     const user = await UserDetails.findById(req.params.id);
-    if(!user){
+    if (!user) {
         res.status(404);
         throw new Error('user not found')
     }
@@ -83,28 +83,68 @@ export const deleteUser = asyncHandler(async (req, res,next) => {
 //private by admin -> api/admin/doctors?userId=64.......cf
 //In profile you can get the doctors details by userId
 export const get_all_doctors = asyncHandler(async (req, res) => {
-    const userId = req.query.userId;
+    // const userId = req.query.userId;
 
     // const doctors = await Doctor.find({},{createdAt:0,updatedAt:0,__v:0}).populate({path:'user',select:'name -_id'});
     // const doctors = await Doctor.find({},{createdAt:0,updatedAt:0,__v:0}).populate('user',['name','email']);
     // const doctors = await Doctor.find({},{createdAt:0,updatedAt:0,__v:0}).explain('queryPlanner');
-    const doctors = userId ? await Doctor.find({ user: userId }).populate({ path: 'user', select: 'name' }) :
-        await Doctor.find({}).populate({ path: 'user', select: 'name' });
-  
-    res.status(200).json(doctors);
+    // const doctors = userId ? await Doctor.find({ user: userId }).populate({ path: 'user', select: 'name' }) :
+    //     await Doctor.find({}).populate({ path: 'user', select: 'name' });
+
+    // const doctors = await Doctor.find({}).populate({ path: 'user', select: 'name' });
+
+    //@todo search based on name // make individual searching method //applying in get approved doctors
+    res.status(200).json(res.filterQueryPaginateResults);
 });
 
 //private by admin -> api/admin/approved-doctors
 export const get_all_approved_doctors = asyncHandler(async (req, res) => {
-    try {
-        // const doctors = await Doctor.find({});
-        const doctors = await Doctor.find({ status: 'approved', user: { $ne: req.user._id } }).populate('user');
-        res.status(200).json(doctors);
-
-    } catch (error) {
-        console.log(error)
-        res.json(error)
+    let query;
+    if (req.query.search) {
+        const users = await (UserDetails.find({ name: { $regex: req.query.search, $options: "i" } }))
+        const userIds = users?.map(user => user._id)
+        query = Doctor.find({
+            $or: [
+                { user: { $in: userIds, $nin: req.user._id } },
+                { expertise_in: { $regex: req.query.search, $options: "i" } }
+            ]
+        })
+            .populate('user');
     }
+    else {
+        query = Doctor.find({ status: 'approved', user: { $ne: req.user._id } }).populate('user');
+    }
+
+    const doctors = await query;
+    res.status(200).json(doctors);
+
+    //*****aggregate******
+    // let doctorsWithUserInfo = await Doctor.aggregate([
+    //     {
+    //         $lookup: {
+    //             from: "usedetails",
+    //             localField: 'user',
+    //             foreignField: '_id',
+    //             as: 'userInfo'
+    //         },
+    //     },
+    //     // { $unwind: "$userInfo" },
+    //     {
+    //         $match: {
+    //             $and: [{ "email": 'antony@yahoo.com'}]
+    //         }
+    //     },
+    //     {
+    //         $project: {
+    //             _id: 1,
+    //             status: 1,
+    //             userName: "$userInfo.name",
+    //         }
+    //     }
+    // ]);
+    // res.status(200).json(doctorsWithUserInfo);
+
+    // const doctors = await Doctor.find({ status: 'approved', user: { $ne: req.user._id } }).populate('user');
 });
 
 //@todo private by admin -> api/admin/approve-all-as-doctor
