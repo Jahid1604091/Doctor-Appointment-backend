@@ -59,7 +59,7 @@ const doctorSchema = mongoose.Schema({
         type:Array,
         required:true
     },
-    certificate_url:{
+    verification_ss:{
         type:String
     },
     reviews: [reviewSchema],

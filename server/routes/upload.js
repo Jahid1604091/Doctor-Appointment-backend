@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 router.post('/avatar',protect, uploadAvatar.single('image'), upload_avatar);
-router.post('/file',protect, uploadCertificate.single('file'), upload_file);
 router.delete('/avatar/:id',protect, deleteFile);
+router.post('/file',protect, uploadCertificate.single('file'), upload_file);
 
 export default router;

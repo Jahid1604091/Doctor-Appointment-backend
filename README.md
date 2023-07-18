@@ -20,8 +20,8 @@ O = Optional
 #### Apply as doctor/Doctor ->
             1. Send Instant Notification to Admin (Socket IO) / Send Email (O)
             2. Checking Time Range / Edit
-            3. Checking Doctors Authenticity (***)
-            4. Rating and feedback on the doctor
+            3. Checking Doctors Authenticity (***) /check by Reg No
+            4. Rating and feedback on the doctor (D)
             
 #### Appointments ->
             1. Check the availability feature (D)
@@ -36,12 +36,14 @@ O = Optional
             2. Upload Photo to cloud/ cloudinary (D)
             3. Update / Delete Profile by user/ADMIN (D)
             4. Add Doctors details including medical, passing year etc 
-            5. Can upload his medical certificate as pdf/image
+            5. Can upload his medical certificate as pdf/image (D)
 
 #### Admin -> 
             1. Check doctors details and approve or delete (D)
-            2. check doctors certificate via online
+            2. check doctors certificate/reg ss via online (D)
             
 
 #### Payment Gateway
             1. After Payment Successful Appointment will be approved (D)
+
+

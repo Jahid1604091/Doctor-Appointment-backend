@@ -7,7 +7,6 @@ import sendEmail from "../utils/sendMail.js";
 import { UserDetails } from "../models/UserDetails.js";
 import PDFDocument from 'pdfkit';
 import fs from 'fs';
-import path from "path";
 
 
 //private -> api/doctors/:id/

@@ -16,8 +16,6 @@ import {
 } from '../controllers/user.js';
 import { protect } from '../middleware/auth.js';
 import { get_all_approved_doctors } from '../controllers/admin/users.js';
-import filterQueryPaginate from '../middleware/filterQueryPaginate.js';
-import { Doctor } from '../models/Doctor.js';
 
 const router = express.Router();
 
