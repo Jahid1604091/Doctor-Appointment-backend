@@ -29,6 +29,8 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 
+app.get('/',(req,res)=>res.send('Server Running...'));
+
 app.use('/api/users',userRoutes);
 app.use('/api/doctors',doctorRoutes);
 app.use('/api/admin',adminRoutes);
@@ -38,7 +40,7 @@ app.use('/api/payment',sslRoutes);
 //make a folder static
 // app.use('/uploads',express.static(path.join(__dirname,'/uploads')))
 
-app.get('/',(req,res)=>res.send('Server Running...'));
+
 
 app.use(notFound);
 app.use(errHandler);

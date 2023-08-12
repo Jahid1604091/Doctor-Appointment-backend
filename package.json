@@ -1,15 +1,13 @@
 {
-  "name": "DoctorApp",
+  "name": "doctor_app",
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "index.js",
-  "engine":{
-    "node":"14.x"
-  },
+  "main": "server.js",
+
   "scripts": {
-    "start": "node index.js",
-    "server": "nodemon index.js"
+    "start": "node server",
+    "server": "nodemon server"
   },
   "keywords": [],
   "author": "",
