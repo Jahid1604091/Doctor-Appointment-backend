@@ -12,6 +12,7 @@ import {
     register,
     register_as_doctor,
     resetPassword,
+    testUsers,
     update_profile
 } from '../controllers/user.js';
 import { protect } from '../middleware/auth.js';
@@ -36,6 +37,7 @@ router.get('/doctors/:id', protect, get_all_approved_doctors);
 router.post('/appointment', protect, new_appointment);
 router.get('/booked-appointments', protect, booked_appointments);
 router.delete('/appointments/:id', protect, delete_appointment);
+router.get('/test-users', testUsers);
 
 
 export default router;

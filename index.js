@@ -38,7 +38,7 @@ app.use('/api/payment',sslRoutes);
 //make a folder static
 // app.use('/uploads',express.static(path.join(__dirname,'/uploads')))
 
-app.get('/',(req,res)=>res.send('Server Running'));
+app.get('/',(req,res)=>res.send('Server Running...'));
 
 app.use(notFound);
 app.use(errHandler);
