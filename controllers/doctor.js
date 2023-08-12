@@ -9,6 +9,7 @@ import PDFDocument from 'pdfkit';
 import fs from 'fs';
 
 
+
 //private -> api/doctors/:id/
 export const get_doctor_by_id = asyncHandler(async (req, res) => {
     const doctor = await Doctor.findById(req.params.id).populate('user');

@@ -1,13 +1,13 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path'
-import userRoutes from './server/routes/user.js';
-import doctorRoutes from './server/routes/doctor.js';
-import adminRoutes from './server/routes/admin/users.js';
-import uploadRoutes from './server/routes/upload.js';
-import sslRoutes from './server/routes/ssl.js';
-import { errHandler, notFound } from './server/middleware/errorHandler.js';
-import { connectDB } from './server/config/db.js';
+import userRoutes from './routes/user.js';
+import doctorRoutes from './routes/doctor.js';
+import adminRoutes from './routes/admin/users.js';
+import uploadRoutes from './routes/upload.js';
+import sslRoutes from './routes/ssl.js';
+import { errHandler, notFound } from './middleware/errorHandler.js';
+import { connectDB } from './config/db.js';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 
