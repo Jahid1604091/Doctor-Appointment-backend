@@ -12,10 +12,8 @@ import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 
 const __dirname = path.resolve() //__dirname is not directly available in es module
-const envRes = dotenv.config();
-if(envRes.error){
-    throw envRes.error
-}
+dotenv.config();
+
 // console.log(envRes.parsed)
 const PORT = process.env.PORT || 5000;
 connectDB();
