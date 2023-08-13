@@ -79,6 +79,7 @@ const filterQueryPaginate = (model, populate = '',role='') => async (req, res, n
     // }
 
     //- the admin
+    console.log(results)
     res.filterQueryPaginateResults = {
         success: true,
         count: results.length,
