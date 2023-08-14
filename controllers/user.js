@@ -20,6 +20,7 @@ export const auth_user = asyncHandler(async (req, res) => {
       sameSite: "strict",
       maxAge: 30 * 24 * 24 * 60 * 60,
     });
+    
     return res.status(200).json({
       success: true,
       data: user,

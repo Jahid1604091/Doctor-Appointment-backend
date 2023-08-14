@@ -19,11 +19,11 @@ dotenv.config();
 const PORT = process.env.PORT || 5000;
 connectDB();
 const app = express();
-app.set('trust proxy', 1);
-app.use(express.static('dist'))
+// app.set('trust proxy', 1);
+// app.use(express.static('dist'))
 app.use(cors({
     credentials: true,
-    origin: process.env.DOMAIN,
+    origin: "*",
   }));
 app.use(express.json());
 app.use(bodyParser.urlencoded({
