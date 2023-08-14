@@ -1,6 +1,7 @@
 D = Done
 O = Optional
-
+Frontend URL : https://doct-appoint.netlify.app/
+Backendend URL : https://prussian-blue-monkey-kilt.cyclic.cloud/
 ### ::Features:: ###
 -----------------------------------------
 #### Auth -> 
