@@ -23,7 +23,7 @@ const app = express();
 // app.use(express.static('dist'))
 app.use(cors({
     credentials: true,
-    origin: "*",
+    origin: process.env.DOMAIN,
   }));
 app.use(express.json());
 app.use(bodyParser.urlencoded({
