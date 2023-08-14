@@ -25,10 +25,11 @@ const app = express();
 
 app.use(cors({
     credentials: true,
-    origin: process.env.DOMAIN,
+    origin: "http://localhost:3000",
     methods: ['GET','POST','PUT','PATCH','DELETE'],
     allowedHeaders: ['Content-Type',],
   }));
+
 app.use(express.json());
 app.use(bodyParser.urlencoded({
     extended: true
