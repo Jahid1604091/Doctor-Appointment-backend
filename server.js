@@ -23,6 +23,7 @@ const app = express();
 // app.use(express.static('dist'))
 app.use(cors({
     credentials: true,
+    headers: ["Content-Type"],
     origin: process.env.DOMAIN,
   }));
 app.use(express.json());
