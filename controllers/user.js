@@ -17,7 +17,7 @@ export const auth_user = asyncHandler(async (req, res) => {
     res.cookie("jwt", user.getSignedJwtToken(), {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
-      sameSite: "None",
+      sameSite: "strict",
       maxAge: 30 * 24 * 24 * 60 * 60,
     });
     
