@@ -26,6 +26,8 @@ const app = express();
 app.use(cors({
     credentials: true,
     origin: process.env.DOMAIN,
+    methods: ['GET','POST','PUT','PATCH','DELETE'],
+    allowedHeaders: ['Content-Type',],
   }));
 app.use(express.json());
 app.use(bodyParser.urlencoded({
