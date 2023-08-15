@@ -47,7 +47,7 @@ export const forgotPassword = asyncHandler(async (req, res) => {
     await user.save();
 
     //sending mail
-    const resetUrl = `${process.env.DOMAIN}/reset-password/${resetToken}`;
+    const resetUrl = `${ process.env.NODE_ENV === 'development' ?  process.env.DEV_DOMAIN : process.env.LIVE_DOMAIN }/reset-password/${resetToken}`;
     // const resetUrlForApiTest = `${req.protocol}://${req.get('host')}/api/users/auth/reset-password/${resetToken}`;
 
     const message = `Lost your password ? \n\nPlease click the link to reset it. <a href=${resetUrl}>Reset</a> `;
@@ -100,8 +100,8 @@ export const resetPassword = asyncHandler(async (req, res) => {
     //create new jwt token
     res.cookie("jwt", user.getSignedJwtToken(), {
       httpOnly: true,
-      secure: process.env.NODE_ENV !== "development",
-      sameSite: "strict",
+      secure: true,
+      sameSite: "None",
       maxAge: 30 * 24 * 24 * 60 * 60,
     });
     return res.status(201).json({

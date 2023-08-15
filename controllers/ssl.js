@@ -8,10 +8,10 @@ export const initiateSSL = async (req, res) => {
     let data = {
         ...req.body,
         currency: 'BDT',
-        success_url: `http://localhost:5000/api/payment/ssl-validate`,
-        fail_url: `http://localhost:5000/api/payment/ssl-fail`,
-        cancel_url: `http://localhost:5000/api/payment/ssl-cancel`,
-        ipn_url: `http://localhost:5000/api/payment/ssl-ipn`,
+        success_url: `${req.protocol}://${req.get('host')}/api/payment/ssl-validate`,
+        fail_url: `${req.protocol}://${req.get('host')}/api/payment/ssl-fail`,
+        cancel_url: `${req.protocol}://${req.get('host')}/api/payment/ssl-cancel`,
+        ipn_url: `${req.protocol}://${req.get('host')}/api/payment/ssl-ipn`,
         shipping_method: 'Courier',
         product_name: 'Computer.',
         product_category: 'Electronic',
@@ -63,17 +63,17 @@ export const SSLsuccess = async (req, res, next) => {
     req.val_id = req.body.val_id;
     next()
     console.log('success')
-    //  res.redirect(`http://localhost:3000/payment/success`)
+    //  res.redirect(`${ process.env.NODE_ENV === 'development' ?  process.env.DEV_DOMAIN : process.env.LIVE_DOMAIN }/payment/success`)
 }
 
 export const SSLfailure = async (req, res) => {
     console.log('fail : ' + req.body)
-    return res.redirect(`http://localhost:3000/payment/fail`)
+    return res.redirect(`${ process.env.NODE_ENV === 'development' ?  process.env.DEV_DOMAIN : process.env.LIVE_DOMAIN }/payment/fail`)
 }
 
 export const SSLcancel = async (req, res) => {
     console.log('cancel : ' + req.body)
-    return res.redirect(`http://localhost:3000/payment/fail`)
+    return res.redirect(`${ process.env.NODE_ENV === 'development' ?  process.env.DEV_DOMAIN : process.env.LIVE_DOMAIN }/payment/fail`)
 }
 
 export const SSLvalidate = async (req, res) => {
@@ -130,5 +130,5 @@ export const SSLvalidate = async (req, res) => {
     appointment.paymentMethod = r1.card_type;
     await appointment.save();
 
-    res.redirect(`http://localhost:3000/booked-appointments?status=${r1.status}`)
+    res.redirect(`${ process.env.NODE_ENV === 'development' ?  process.env.DEV_DOMAIN : process.env.LIVE_DOMAIN }/booked-appointments?status=${r1.status}`)
 }

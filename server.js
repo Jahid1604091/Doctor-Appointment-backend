@@ -25,7 +25,7 @@ const app = express();
 
 app.use(cors({
     credentials: true,
-    origin: ['http://localhost:3000','https://doct-appoint.netlify.app'],
+    origin: [process.env.DEV_DOMAIN,process.env.LIVE_DOMAIN],
     methods: ['GET','POST','PUT','PATCH','DELETE'],
     allowedHeaders: ['Content-Type',],
   }));
