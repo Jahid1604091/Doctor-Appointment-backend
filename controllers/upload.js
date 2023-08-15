@@ -4,10 +4,12 @@ import cloudinary, { uploadAvatar, uploadCertificate } from "../config/cloudinar
 export const upload_avatar = asyncHandler(async (req, res) => {
     try {
         const result = await cloudinary.uploader.upload(req.file.path);
+        
         res.status(200).json(result)
     } catch (err) {
         return res.status(500).json({msg: err.message})
     }
+    
 })
 
 

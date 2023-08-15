@@ -62,7 +62,7 @@ export const SSLipn = async (req, res) => {
 export const SSLsuccess = async (req, res, next) => {
     req.val_id = req.body.val_id;
     next()
-    console.log('success')
+  
     //  res.redirect(`${ process.env.NODE_ENV === 'development' ?  process.env.DEV_DOMAIN : process.env.LIVE_DOMAIN }/payment/success`)
 }
 
