@@ -52,7 +52,7 @@ export const initiateSSL = async (req, res) => {
 }
 
 export const SSLipn = async (req, res) => {
-    console.log('ipn : ' + req.body)
+
     return res.status(200).json({
         success: true,
         data: req.body
@@ -67,12 +67,12 @@ export const SSLsuccess = async (req, res, next) => {
 }
 
 export const SSLfailure = async (req, res) => {
-    console.log('fail : ' + req.body)
+   
     return res.redirect(`${ process.env.NODE_ENV === 'development' ?  process.env.DEV_DOMAIN : process.env.LIVE_DOMAIN }/payment/fail`)
 }
 
 export const SSLcancel = async (req, res) => {
-    console.log('cancel : ' + req.body)
+    
     return res.redirect(`${ process.env.NODE_ENV === 'development' ?  process.env.DEV_DOMAIN : process.env.LIVE_DOMAIN }/payment/fail`)
 }
 
@@ -80,7 +80,7 @@ export const SSLvalidate = async (req, res) => {
     //tran_id = order_id
     const sslcz = new SSLCommerzPayment(process.env.STORE_ID, process.env.STORE_PASS, false)
     const r1 = await sslcz.validate({ val_id: req.val_id })
-    console.log('Validate - ', r1)
+  
 
     //     status: 'VALID',
     //   tran_date: '2023-07-10 01:22:10',

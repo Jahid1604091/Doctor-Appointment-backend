@@ -298,7 +298,7 @@ export const new_appointment = asyncHandler(async (req, res) => {
     unseenNotifications.push({
       type: "new-appointment",
       message: `${user.name} has applied for your appointment!`,
-      clickPath: "/doctors/appointments",
+      clickPath: "/booked-appointments",
     });
 
     await doctor_user_table.save();
