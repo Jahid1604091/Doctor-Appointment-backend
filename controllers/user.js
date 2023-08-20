@@ -6,6 +6,7 @@ import moment from "moment";
 import sendEmail from "../utils/sendMail.js";
 import crypto from "crypto";
 import ErrorResponse from "../utils/errorResponse.js";
+import passport from "passport";
 
 //public -> api/users/auth
 export const auth_user = asyncHandler(async (req, res) => {
@@ -20,7 +21,7 @@ export const auth_user = asyncHandler(async (req, res) => {
       sameSite: "None",
       maxAge: 30 * 24 * 24 * 60 * 60,
     });
- 
+
     return res.status(200).json({
       success: true,
       data: user,
@@ -31,6 +32,25 @@ export const auth_user = asyncHandler(async (req, res) => {
     throw new Error("Invalid Email or Password");
   }
 });
+
+
+export const find_user_by_email = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  const user = await UserDetails.findOne({ email });
+
+  if (user) {
+    return res.status(200).json({
+      success: true,
+      data: user,
+      // token: user.getSignedJwtToken(),
+    });
+  } else {
+    res.status(400);
+    throw new Error("Invalid Email or Password");
+  }
+});
+
+
 
 //public -> api/users/auth/forgot-password
 export const forgotPassword = asyncHandler(async (req, res) => {
@@ -47,7 +67,11 @@ export const forgotPassword = asyncHandler(async (req, res) => {
     await user.save();
 
     //sending mail
-    const resetUrl = `${ process.env.NODE_ENV === 'development' ?  process.env.DEV_DOMAIN : process.env.LIVE_DOMAIN }/reset-password/${resetToken}`;
+    const resetUrl = `${
+      process.env.NODE_ENV === "development"
+        ? process.env.DEV_DOMAIN
+        : process.env.LIVE_DOMAIN
+    }/reset-password/${resetToken}`;
     // const resetUrlForApiTest = `${req.protocol}://${req.get('host')}/api/users/auth/reset-password/${resetToken}`;
 
     const message = `Lost your password ? \n\nPlease click the link to reset it. <a href=${resetUrl}>Reset</a> `;
@@ -385,7 +409,7 @@ export const delete_appointment = asyncHandler(async (req, res) => {
 //test public -> api/users/test-users
 //method DELETE
 export const testUsers = asyncHandler(async (req, res) => {
-  const users = await UserDetails.find({}).select('-password -role');
+  const users = await UserDetails.find({}).select("-password -role");
 
   if (!users) {
     throw new Error("Users not found", 404);
@@ -396,3 +420,5 @@ export const testUsers = asyncHandler(async (req, res) => {
     });
   }
 });
+
+

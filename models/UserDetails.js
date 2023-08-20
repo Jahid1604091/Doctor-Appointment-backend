@@ -30,7 +30,7 @@ const userSchema = mongoose.Schema({
     },
     password: {
         type: String,
-        required: [true, 'Please add a password'],
+        // required: [true, 'Please add a password'],
         minlength: 6,
     },
     seenNotifications: {
@@ -60,6 +60,7 @@ const userSchema = mongoose.Schema({
     emailVerificationToken: String,
     emailTokenExpire: Date,
     verified: Boolean,
+    googleId:String,
 
 
 
@@ -94,6 +95,7 @@ userSchema.methods.matchPassword = async function (enteredPass) {
 //sign JWT
 userSchema.methods.getSignedJwtToken = function () {
     //returning token
+    
     return jwt.sign({ id: this._id },
         process.env.JWT_SECRET,
         { expiresIn: process.env.JWT_EXPIRED_IN });

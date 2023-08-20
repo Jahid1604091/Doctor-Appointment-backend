@@ -6,11 +6,15 @@ import doctorRoutes from './routes/doctor.js';
 import adminRoutes from './routes/admin/users.js';
 import uploadRoutes from './routes/upload.js';
 import sslRoutes from './routes/ssl.js';
+import authRoutes from './routes/auth.js';
 import { errHandler, notFound } from './middleware/errorHandler.js';
 import { connectDB } from './config/db.js';
+import passportConfig from './config/passport.js';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import passport from 'passport';
+import session from 'express-session';
 
 const __dirname = path.resolve() //__dirname is not directly available in es module
 dotenv.config();
@@ -18,11 +22,16 @@ dotenv.config();
 // console.log(envRes.parsed)
 const PORT = process.env.PORT || 5000;
 connectDB();
+
+//passport
+passportConfig(passport);
+
+
 const app = express();
 // app.set('trust proxy', 1);
 // app.use(express.static('dist'))
 
-
+app.use(cookieParser());
 app.use(cors({
     credentials: true,
     origin: [process.env.DEV_DOMAIN,process.env.LIVE_DOMAIN],
@@ -30,13 +39,23 @@ app.use(cors({
     allowedHeaders: ['Content-Type',],
   }));
 
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: false,
+  // cookie: { secure: true }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session())
+
 app.use(express.json());
 app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
 app.use(express.urlencoded({extended:true}));
-app.use(cookieParser());
+
 
 app.get('/',(req,res)=>res.send('Server Running...'));
 
@@ -45,7 +64,7 @@ app.use('/api/doctors',doctorRoutes);
 app.use('/api/admin',adminRoutes);
 app.use('/api/upload',uploadRoutes);
 app.use('/api/payment',sslRoutes);
-
+app.use('/auth',authRoutes)
 //make a folder static
 // app.use('/uploads',express.static(path.join(__dirname,'/uploads')))
 

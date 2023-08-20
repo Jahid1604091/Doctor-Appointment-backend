@@ -6,17 +6,20 @@ Backendend URL : https://prussian-blue-monkey-kilt.cyclic.cloud/
 -----------------------------------------
 #### Auth -> 
             1. Normal Registration (D)
-            2. Google OAuth
+            2. Google OAuth/PassportJs
             3. Forgot and Reset Password with mail (D)
             4. Remember Me
             5. Verification with E-mail
-            
+            6. OTP 
+            7. refresh token
 
 #### Home ->
             1. Add Doctor No, Location, Chamber, Others
             2. Pagination (D)
             3. My Upcoming Appointments
             4. Search desired doctor (D)
+            5. Location/Area based Doctor
+            6. Active/Inactive Online
 
 #### Apply as doctor/Doctor ->
             1. Send Instant Notification to Admin (Socket IO) / Send Email (O)
@@ -46,5 +49,10 @@ Backendend URL : https://prussian-blue-monkey-kilt.cyclic.cloud/
 
 #### Payment Gateway
             1. After Payment Successful Appointment will be approved (D)
+            2. SSLCommerze (Sandbox)/ (D)
+            3. Stripe
 
-
+#### Message/Notification
+            1. Normal Notification (D)
+            2. Real time (socket)
+            3. Chat System (doctor, patient)

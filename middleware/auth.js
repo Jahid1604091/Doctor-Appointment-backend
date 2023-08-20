@@ -32,3 +32,11 @@ export const protectByAdmin = asyncHandler(async(req,res,next)=>{
         throw new Error('Not authorized as Admin !');
     }
 });
+
+export const isLoggedIn = (req, res, next) => {
+    if (req.user) {
+        next();
+    } else {
+        res.sendStatus(401);
+    }
+}
