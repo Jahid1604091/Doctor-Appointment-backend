@@ -35,12 +35,13 @@ app.use(cookieParser());
 app.use(cors({
     credentials: true,
     origin: [process.env.DEV_DOMAIN,process.env.LIVE_DOMAIN],
+    // origin: "*",
     methods: ['GET','POST','PUT','PATCH','DELETE'],
     allowedHeaders: ['Content-Type',],
   }));
 
 app.use(session({
-  secret: 'keyboard cat',
+  secret: 'keyboarddfcat',
   resave: false,
   saveUninitialized: false,
   // cookie: { secure: true }
