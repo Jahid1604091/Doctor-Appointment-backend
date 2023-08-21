@@ -6,7 +6,7 @@ Backendend URL : https://prussian-blue-monkey-kilt.cyclic.cloud/
 -----------------------------------------
 #### Auth -> 
             1. Normal Registration (D)
-            2. Google OAuth/PassportJs
+            2. Google OAuth/PassportJs (D)
             3. Forgot and Reset Password with mail (D)
             4. Remember Me
             5. Verification with E-mail
