@@ -15,6 +15,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import passport from 'passport';
 import session from 'express-session';
+import { authCheck } from './middleware/auth.js';
 
 const __dirname = path.resolve() //__dirname is not directly available in es module
 dotenv.config();
@@ -47,8 +48,21 @@ app.use(session({
   // cookie: { secure: true }
 }));
 
+
+
+
 app.use(passport.initialize());
 app.use(passport.session())
+
+app.get("/", authCheck, (req, res) => {
+  res.status(200).json({
+    authenticated: true,
+    message: "user successfully authenticated",
+    user: req.user,
+    cookies: req.cookies
+  });
+});
+
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({

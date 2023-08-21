@@ -33,10 +33,13 @@ export const protectByAdmin = asyncHandler(async(req,res,next)=>{
     }
 });
 
-export const isLoggedIn = (req, res, next) => {
-    if (req.user) {
-        next();
+export const authCheck = (req, res, next) => {
+    if (!req.user) {
+      res.status(401).json({
+        authenticated: false,
+        message: "user has not been authenticated"
+      });
     } else {
-        res.sendStatus(401);
+      next();
     }
-}
+  };

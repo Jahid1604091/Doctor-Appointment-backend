@@ -3,12 +3,28 @@ import { UserDetails } from "../models/UserDetails.js";
 import passport from "passport";
 
 export default function () {
+
+  passport.serializeUser(function (user, done) {
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(function (id, done) {
+    UserDetails.findById(id)
+    .then(user => {
+      done(null, user);
+    })
+    .catch(e => {
+      done(new Error("Failed to deserialize an user"));
+    });
+  });
+
+
   passport.use(
     new GoogleStrategy(
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: "/auth/google/callback",
+        callbackURL: "/auth/google/callback",            
         // passReqToCallback:true
       },
       async (req, accessToken, refreshToken, profile, done) => {
@@ -43,11 +59,5 @@ export default function () {
     )
   );
 
-  passport.serializeUser(function (user, done) {
-    done(null, user);
-  });
 
-  passport.deserializeUser(function (user, done) {
-    done(null, user);
-  });
 }
