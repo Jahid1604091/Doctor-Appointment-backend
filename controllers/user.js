@@ -141,6 +141,7 @@ export const resetPassword = asyncHandler(async (req, res) => {
 
 //private -> api/users/logout
 export const logout = asyncHandler(async (req, res) => {
+  
   res.cookie("jwt", "", {
     httpOnly: true,
     expires: new Date(0),

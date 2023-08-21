@@ -5,10 +5,13 @@ import passport from "passport";
 export default function () {
 
   passport.serializeUser(function (user, done) {
+    console.log('Serializer ')
     done(null, user.id);
+    
   });
 
   passport.deserializeUser(function (id, done) {
+    console.log('De Serializer ')
     UserDetails.findById(id)
     .then(user => {
       done(null, user);
@@ -34,6 +37,7 @@ export default function () {
           const user = await UserDetails.findOne({ googleId: profile.id });
           if (user) {
             done(null, user);
+            
           } else {
             const user = await UserDetails.create({
               googleId: profile.id,
@@ -50,6 +54,8 @@ export default function () {
             //   token: user.getSignedJwtToken(),
             // });
           }
+
+          
         } catch (error) {
           //   const errors = Object.values(error.errors);
           //   res.status(400).json({ msg: errors[0].message });
