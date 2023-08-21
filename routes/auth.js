@@ -1,7 +1,6 @@
 import express from "express";
 import passport from "passport";
 
-
 const router = express.Router();
 
 router.get("/login/success", (req, res) => {
@@ -31,7 +30,7 @@ router.get(
 
 router.get("/logout", (req, res) => {
   req.logout();
-  res.redirect(process.env.DEV_DOMAIN);
+  res.redirect(process.env.NODE_ENV==='production' ? process.env.LIVE_DOMAIN : process.env.DEV_DOMAIN);
 });
 
 router.get("/google/callback",passport.authenticate("google"),(req,res)=>{
@@ -41,7 +40,7 @@ router.get("/google/callback",passport.authenticate("google"),(req,res)=>{
       sameSite: "None",
       maxAge: 30 * 24 * 24 * 60 * 60,
     });
-  res.redirect(process.env.DEV_DOMAIN)
+  res.redirect(process.env.NODE_ENV==='production' ? process.env.LIVE_DOMAIN : process.env.DEV_DOMAIN)
 });
 
 // router.get("/google/callback",passport.authenticate("google", {
