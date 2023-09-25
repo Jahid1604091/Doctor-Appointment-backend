@@ -22,6 +22,10 @@ export const auth_user = asyncHandler(async (req, res) => {
       maxAge: 30 * 24 * 24 * 60 * 60,
     });
 
+   
+    global.io.socket?.join(user._id.toString())
+    global.io.sockets.in(user._id.toString()).emit('connectedRoom','Connected in Room No '+user._id.toString())
+
     return res.status(200).json({
       success: true,
       data: user,
@@ -32,7 +36,6 @@ export const auth_user = asyncHandler(async (req, res) => {
     throw new Error("Invalid Email or Password");
   }
 });
-
 
 export const find_user_by_email = asyncHandler(async (req, res) => {
   const { email } = req.body;
@@ -49,8 +52,6 @@ export const find_user_by_email = asyncHandler(async (req, res) => {
     throw new Error("Invalid Email or Password");
   }
 });
-
-
 
 //public -> api/users/auth/forgot-password
 export const forgotPassword = asyncHandler(async (req, res) => {
@@ -141,7 +142,6 @@ export const resetPassword = asyncHandler(async (req, res) => {
 
 //private -> api/users/logout
 export const logout = asyncHandler(async (req, res) => {
-  
   res.cookie("jwt", "", {
     httpOnly: true,
     expires: new Date(0),
@@ -320,6 +320,8 @@ export const new_appointment = asyncHandler(async (req, res) => {
     //send appointment notification to doctor
     const unseenNotifications = doctor_user_table.unseenNotifications;
 
+    console.log(global.socket);
+
     unseenNotifications.push({
       type: "new-appointment",
       message: `${user.name} has applied for your appointment!`,
@@ -327,7 +329,7 @@ export const new_appointment = asyncHandler(async (req, res) => {
     });
 
     await doctor_user_table.save();
-
+   global.socket.emit("new_appoinment", "A new Appointment");
     return res.status(201).json({
       success: true,
       data: doctor_user_table,
@@ -341,6 +343,7 @@ export const new_appointment = asyncHandler(async (req, res) => {
 //private -> api/users/booked-appointments
 export const booked_appointments = asyncHandler(async (req, res) => {
   //get appointments list as user
+  
   const appointments = await Appointment.find({ user: req.user._id }).populate(
     "doctor"
   );
@@ -397,9 +400,16 @@ export const delete_appointment = asyncHandler(async (req, res) => {
   if (!appointments) {
     throw new Error("Appointment not found", 404);
   } else {
+
+    console.log('Delete appointment')
+
+    global.io.emit("delete_appointment", {appointments});
+
     const deletedAppointment = await Appointment.findByIdAndRemove(
       req.params.id
     );
+
+
     return res.status(200).json({
       success: true,
       data: "Appointment is removed!",
@@ -421,5 +431,3 @@ export const testUsers = asyncHandler(async (req, res) => {
     });
   }
 });
-
-

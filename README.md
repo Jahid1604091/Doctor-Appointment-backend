@@ -16,7 +16,7 @@ Backendend URL : https://prussian-blue-monkey-kilt.cyclic.cloud/
 #### Home ->
             1. Add Doctor No, Location, Chamber, Others
             2. Pagination (D)
-            3. My Upcoming Appointments
+            3. My Upcoming Appointments*
             4. Search desired doctor (D)
             5. Location/Area based Doctor
             6. Active/Inactive Online

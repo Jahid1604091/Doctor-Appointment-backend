@@ -7,7 +7,7 @@ import adminRoutes from './routes/admin/users.js';
 import uploadRoutes from './routes/upload.js';
 import sslRoutes from './routes/ssl.js';
 import authRoutes from './routes/auth.js';
-import { errHandler, notFound } from './middleware/errorHandler.js';
+import { errHandler, notFound, } from './middleware/errorHandler.js';
 import { connectDB } from './config/db.js';
 import passportConfig from './config/passport.js';
 import cookieParser from 'cookie-parser';
@@ -16,6 +16,8 @@ import cors from 'cors';
 import passport from 'passport';
 import session from 'express-session';
 import { authCheck } from './middleware/auth.js';
+import { Server } from 'socket.io';
+import http from 'http';
 
 const __dirname = path.resolve() //__dirname is not directly available in es module
 dotenv.config();
@@ -29,6 +31,11 @@ passportConfig(passport);
 
 
 const app = express();
+const httpServer = http.createServer(app);
+const io = new Server(httpServer, {
+  cors: { origin: [process.env.DEV_DOMAIN, process.env.LIVE_DOMAIN], methods: ['GET','POST','PUT','PATCH','DELETE'], },
+});
+
 // app.set('trust proxy', 1);
 // app.use(express.static('dist'))
 
@@ -84,8 +91,18 @@ app.use('/auth',authRoutes)
 // app.use('/uploads',express.static(path.join(__dirname,'/uploads')))
 
 
+io.on("connection", (socket) => {
+  console.log("A user connected");
+ 
+  socket.on("disconnect", () => {
+    console.log("A user Disconnected");
+    
+  });
+});
+global.io = io
+
 
 app.use(notFound);
 app.use(errHandler);
 
-app.listen(PORT,()=>console.log(`Server running on port ${PORT}`));
+httpServer.listen(PORT,()=>console.log(`Server running on port ${PORT}`));
